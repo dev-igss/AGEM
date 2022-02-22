@@ -1,0 +1,77 @@
+================= TABLA DE USUARIOS ======================
+1. ID
+2. Nombres
+3. Apellidos
+4. IBM
+5. Contraseña
+6. Permisos
+7. Rol
+8. Estado
+9. Token
+10. Delete at
+11. Created at
+12. Update at
+
+================= TABLA DE BITACORAS ======================
+1. ID
+2. Accion
+3. ID Usuario 
+4. Created at
+5. Update at
+
+================= TABLA DE UNIDADES ======================
+1. ID
+2. Nombre
+3. Codigo Administrativo
+4. Delete at
+5. Create at
+6. Update at
+
+================= TABLA DE SERVICIOS ======================
+1. ID
+2. Nombre
+3. ID Padre (Servicio General)
+4. Tipo (1. Servicio General, 2. Servicio en especifico)
+5. Delete at
+6. Create at
+7. Update at
+
+================= TABLA DE EXAMENES ======================
+1. ID
+2. ID Unidad Medica
+3. ID Servicio (RX, USG, MMO, DMO)
+4. Nombre
+5. Delete at
+6. Create at
+7. Update at
+
+================= TABLA DE PACIENTES ======================
+1. ID
+2. Afiliacion
+3. Nombres
+4. Apellidos
+5. Fecha Nacimiento (Opcional)
+6. Edad (Opcional)
+7. Numero RX
+8. Numero USG
+9. Numero MMO
+10. Numero DMO
+11. Delete at
+12. Create at
+13. Update at
+
+================= TABLA DE CITAS ======================
+1. ID
+2. Fecha
+3. ID Paciente
+4. Numero Examen (RX, USG, MMO, DMO - Asignado al paciente)
+5. ID Servicio (Solicitante)
+6. ID Examen (Estudio a realizar)
+7. Estado (Registrada, En Atencion, Ausente, Realizada, Reprogramada)
+8. Tipo (Nueva - 1era vez, Reconsulta - 2 o mas citas)
+9. Delete at
+10. Create at
+11. Update at
+
+
+
