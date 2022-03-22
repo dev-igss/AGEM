@@ -28,10 +28,10 @@
                 <table id="table-modules" class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <td>ID</td>
-                            <td>ACCION</td>
-                            <td>REALIZADO POR</td>
-                            <td>FECHA Y HORA</td>
+                            <td><strong>ID</strong></td>
+                            <td><strong>ACCION</strong></td>
+                            <td><strong>REALIZADO POR</strong></td>
+                            <td><strong>FECHA Y HORA</strong></td>
                         </tr>
                     </thead>
                     <tbody>

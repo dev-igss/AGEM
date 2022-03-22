@@ -28,7 +28,7 @@
                 <div class="col-md-3">
                     <div class="panel shadow">
                         <div class="header">
-                            <h2 class="title"><i class="fas fa-users"></i> Productos Registrados</h2>
+                            <h2 class="title"><i class="fas fa-users"></i> Pacientes Registrados</h2>
                         </div>
                         <div class="inside">
                             <div class="big_count">
@@ -54,7 +54,7 @@
                 <div class="col-md-3">
                     <div class="panel shadow">
                         <div class="header">
-                            <h2 class="title"><i class="fas fa-users"></i> Ambientes Registrados</h2>
+                            <h2 class="title"><i class="fas fa-users"></i> Citas Registrados</h2>
                         </div>
                         <div class="inside">
                             <div class="big_count">

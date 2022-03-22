@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Models\Unit, App\Http\Models\Bitacora, App\Http\Models\Municipalities, App\Http\Models\Departments;
+use App\Http\Models\Unit, App\Http\Models\Bitacora, App\Http\Models\Location;
 use Validator, Str, Config, Auth;
 
 class UnitsController extends Controller
@@ -19,12 +19,12 @@ class UnitsController extends Controller
 
     public function getHome(){
         $units = Unit::orderBy('name', 'Asc')->get();
-        $municipalities = Municipalities::orderBy('code', 'Asc')->get();
+        $locations = Location::orderBy('code', 'Asc')->get();
 
         $data = [
-                'units' => $units,
-                'municipalities' => $municipalities
-            ];
+            'units' => $units,
+            'locations' => $locations
+        ];
 
     	return view('admin.units.home', $data);
     }
@@ -46,7 +46,7 @@ class UnitsController extends Controller
             $u = new Unit;
             $u->name = e($request->input('name'));
             $u->code = $request->input('code');
-            $u->municipality_id = $request->input('municipality_id');
+            $u->location_id = $request->input('location_id');
 
             if($u->save()):
                 $b = new Bitacora;

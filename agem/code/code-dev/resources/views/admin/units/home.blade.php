@@ -19,7 +19,7 @@
 
                         <div class="inside">
                             {!! Form::open(['url' => '/admin/unit/add', 'files' => true]) !!}
-                                <label for="name"><strong> Nombre de Unidad:</strong> </label>
+                                <label for="name"><strong><sup style="color: red;">(*)</sup> Nombre de Unidad:</strong> </label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
                                     {!! Form::text('name', null, ['class'=>'form-control']) !!}
@@ -31,11 +31,11 @@
                                     {!! Form::text('code', null, ['class'=>'form-control']) !!}
                                 </div>
 
-                                <label class="mtop16"> <strong> Municipio de Ubicación </strong></label>
-                                <select name="municipality_id" id="idsupplier" style="width: 100%;">
-                                    @foreach ($municipalities as $m)                                    
+                                <label class="mtop16"> <strong><sup style="color: red;">(*)</sup> Municipio de Ubicación </strong></label>
+                                <select name="location_id" id="idsupplier" style="width: 100%;">
+                                    @foreach ($locations as $l)                                    
                                         <option></option>
-                                        <option value="{{$m->id}}">{{$m->code.' / '.$m->name.' / '.$m->dep->name}}</option>
+                                        <option value="{{$l->id}}">{{$l->name.' / '.$l->department}}</option>
                                     @endforeach
                                 </select>
 
@@ -49,7 +49,7 @@
             <div class="col-md-8">
                 <div class="panel shadow">
                     <div class="header">
-                        <h2 class="title"><i class="fas fa-hospital-user"></i> Unidades Hospitalarias o Departamentales</a>
+                        <h2 class="title"><i class="fas fa-hospital-user"></i> Unidades Hospitalarias </a>
                     </div>
 
                     <div class="inside">
@@ -75,7 +75,7 @@
                                         </div>
                                         </td>
                                         <td>{{ $unit->name }}</td>
-                                        <td>{{ $unit->mun->name.' / '.$unit->mun->dep->name }}</td>
+                                        <td>{{ $unit->location->name.' / '.$unit->location->department }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

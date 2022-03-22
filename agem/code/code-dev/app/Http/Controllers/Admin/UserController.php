@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\User, App\Http\Models\Unit, App\Http\Models\Service, App\Http\Models\Bitacora, App\Http\Models\MaintenanceArea, App\Http\Models\Environment;
+use App\User, App\Http\Models\Unit, App\Http\Models\Service, App\Http\Models\Bitacora;
 use Validator, Auth, Hash, Config;
 
 class UserController extends Controller
@@ -17,34 +17,15 @@ class UserController extends Controller
         $this->middleware('Permissions');
     }
 
-    public function getUsers($status){
-        switch ($status) {
-            case '0':
-                $users = User::where('status', '0')->orderBy('id', 'Asc')->get();
-            break;
+    public function getUsers(){
 
-            case '1':
-                $users = User::where('status', '1')->orderBy('id', 'Asc')->get();
-            break;
-
-            case 'all':
-                $users = User::orderby('id','Asc')->get();
-            break;
-
-            case 'trash':
-                $users = User::onlyTrashed()->orderBy('id', 'Asc')->get();
-            break;
-        }
+        $users = User::all();
 
         $data = [
-            'users'=>$users,
+            'users' => $users,
         ];
 
         return view('admin.users.home',$data);
-    }
-
-    public function getUserAdd(){
-        return view('admin.users.add');
     }
 
     public function postUserAdd(Request $request){
@@ -66,7 +47,7 @@ class UserController extends Controller
         if($validator->fails()):
             return back()->withErrors($validator)->with('error', '¡Se ha producido un error!.')->withInput();
         else:
-            $password = Config::get('sicma.default_password');
+            $password = Config::get('agem.default_password');
 
             $user = new User;
             $user->name = e($request->input('name'));
@@ -80,7 +61,7 @@ class UserController extends Controller
 
             $permissions = json_encode($permissions);
             $user->permissions = $permissions;
-            $user->role = '2';
+            $user->role = '3';
             $user->status = '1';
 
             if($user->save()):
@@ -98,16 +79,12 @@ class UserController extends Controller
     public function getUserEdit($id){
 
         $u = User::findOrFail($id);
-        $maintenance_areas = MaintenanceArea::pluck('name','id');
-        $services = Environment::where('type','1')->pluck('name','id');
 
         $data = [
-            'u' => $u,
-            'maintenance_areas' => $maintenance_areas,
-            'services' => $services
+            'u' => $u
         ];
 
-        return view('admin.users.user_edit',$data);
+        return view('admin.users.edit',$data);
     }
 
     public function postUserEdit($id, Request $request){
@@ -120,10 +97,6 @@ class UserController extends Controller
 
         if($request->input('lastname') ):
             $u->lastname = e($request->input('lastname'));
-        endif;
-
-        if($request->input('ibm') ):
-            $u->ibm = e($request->input('ibm'));
         endif;
 
         if($request->input('idarea') ):
@@ -208,7 +181,7 @@ class UserController extends Controller
         $u = User::findOrFail($id);
         $data = ['u' => $u];
 
-        return view('admin.users.user_permissions', $data);
+        return view('admin.users.permissions', $data);
     }
 
     public function postUserPermissions(Request $request, $id){

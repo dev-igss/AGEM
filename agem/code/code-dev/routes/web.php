@@ -19,3 +19,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/login','ConnectController@getLogin')->name('login');
 Route::post('/login','ConnectController@postLogin')->name('login');
 Route::get('/logout','ConnectController@getLogout')->name('logout');
+
+Route::get('/patients_days', 'PatientDayController@getPatientDay')->name('patient_day');
+Route::get('/patients_days/{id}/materials', 'PatientDayController@getMaterials')->name('materials');
+Route::post('/patients_days/materials', 'PatientDayController@postMaterials')->name('materials');
+
+//Request Ajax
+Route::get('/agem/api/load/name/study/{id}', 'ApiController@getStudyName');
