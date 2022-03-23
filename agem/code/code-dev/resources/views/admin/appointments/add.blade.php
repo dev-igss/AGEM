@@ -173,7 +173,7 @@
                         <label for="name"><strong>Fecha a Agendar:</strong></label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
-                            {!! Form::date('date', null, ['class'=>'form-control']) !!}
+                            {!! Form::date('date', null, ['class'=>'form-control', 'id' => 'date_new_app']) !!}
                         </div>
 
                         <br>
@@ -264,6 +264,22 @@
         var cont = 0;
 
         $(document).ready(function(){
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+
+            if (mm < 10) {
+                mm = '0' + mm;
+            } 
+                
+            today = yyyy + '-' + mm + '-' + dd;
+            document.getElementById("date_new_app").setAttribute("min", today);
+
             $('#btn_agregar').click(function(){
                 agregar_tabla();
             });
