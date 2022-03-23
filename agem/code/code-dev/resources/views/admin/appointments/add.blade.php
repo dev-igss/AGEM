@@ -150,10 +150,10 @@
                                 
 
                             </tbody>
-                        </table>
+                        </table> 
 
 
-                        <label class="mtop16" style="color: red; font-size: 1.5em; margin-left: 50px; display: none;" id="appointment_msg" >¡No se encontraron citas previas!</label>
+                        <label class="mtop16" style="color: red; font-size: 1.5em; margin-left: 50px; font-weight: bold; display: none;" id="appointment_msg" >¡No se encontraron citas previas!</label>
 
 
                         
