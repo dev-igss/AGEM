@@ -71,6 +71,9 @@ class AppointmentController extends Controller
                         ->where('status', '0')
                         ->get();
                     $area = '0';
+                    $appointments_odls = Appointment::where('patient_id', $idpatient)
+                                ->where('area',$area)
+                                ->count();
                 break;
 
                 case '1':
@@ -80,6 +83,9 @@ class AppointmentController extends Controller
                         ->where('status', '0')
                         ->get();
                     $area = '1';
+                    $appointments_odls = Appointment::where('patient_id', $idpatient)
+                                ->where('area',$area)
+                                ->count();
                 break;
 
                 case '2':
@@ -89,6 +95,9 @@ class AppointmentController extends Controller
                         ->where('status', '0')
                         ->get();
                     $area = '2';
+                    $appointments_odls = Appointment::where('patient_id', $idpatient)
+                                ->where('area',$area)
+                                ->count();
                 break;
 
                 case '3':
@@ -98,6 +107,9 @@ class AppointmentController extends Controller
                         ->where('status', '0')
                         ->get();
                     $area = '3';
+                    $appointments_odls = Appointment::where('patient_id', $idpatient)
+                                ->where('area',$area)
+                                ->count();
                 break;
 
             endswitch;
@@ -105,9 +117,6 @@ class AppointmentController extends Controller
             foreach($code_exp as $ce):
                 $code_assig = $ce->code;
             endforeach;
-
-            $appointments_odls = Appointment::where('patient_id', $idpatient)
-                                ->count();
 
             if($appointments_odls == '0'):
                 $appointments_type = '0';
