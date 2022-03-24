@@ -32,12 +32,15 @@
                                 </div>
 
                                 <label class="mtop16"> <strong><sup style="color: red;">(*)</sup> Municipio de Ubicación </strong></label>
-                                <select name="location_id" id="idsupplier" style="width: 100%;">
-                                    @foreach ($locations as $l)                                    
-                                        <option></option>
-                                        <option value="{{$l->id}}">{{$l->name.' / '.$l->department}}</option>
-                                    @endforeach
-                                </select>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
+                                    <select name="location_id" id="idsupplier" style="width: 90%;">
+                                        @foreach ($locations as $l)                                    
+                                            <option></option>
+                                            <option value="{{$l->id}}">{{$l->name.' / '.$l->department}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
                                 {!! Form::submit('Guardar', ['class'=>'btn btn-success mtop16']) !!}
                             {!! Form::close() !!}
