@@ -41,10 +41,11 @@ class PatientDayController extends Controller
 
     public function postMaterials(Request $request){
         $ibm_tec = $request->get('ibm');
-        $tecnico = User::select('id')->where('ibm', $ibm_tec)->limit(1)->get();
+        $tecnico = User::select('id','name','lastname')->where('ibm', $ibm_tec)->limit(1)->get();
         
         foreach($tecnico as $tec):
             $id_tec = $tec->id;
+            $name_tec = $tec->name.' '.$tec->lastname;
         endforeach;
 
         $cita = Appointment::findOrFail($request->get('appointmentid'));
@@ -71,7 +72,7 @@ class PatientDayController extends Controller
         if($materials->save()):     
             
             $b = new Bitacora;
-            $b->action = "Tecnico finalizo atencion de cita";
+            $b->action = "Tecnico ".$name_tec." finalizo atención de la cita no. ".$cita->id;
             $b->user_id = $id_tec;
             $b->save();
 

@@ -60,6 +60,7 @@ class AppointmentController extends Controller
             $type_exam = $request->input('type_exam');
             $affiliation_p = Patient::select('affiliation')
                                 ->where('id', $idpatient)
+                                ->limit(1)
                                 ->get();
 
             switch($type_exam):
@@ -79,10 +80,10 @@ class AppointmentController extends Controller
                 case '1':
                     $code_exp = CodePatient::select('code')
                         ->where('patient_id', $idpatient)
-                        ->where('nomenclature', 'USG')
+                        ->where('nomenclature', 'RX')
                         ->where('status', '0')
                         ->get();
-                    $area = '1';
+                    $area = '0';
                     $appointments_odls = Appointment::where('patient_id', $idpatient)
                                 ->where('area',$area)
                                 ->count();
@@ -91,7 +92,7 @@ class AppointmentController extends Controller
                 case '2':
                     $code_exp = CodePatient::select('code')
                         ->where('patient_id', $idpatient)
-                        ->where('nomenclature', 'MMO')
+                        ->where('nomenclature', 'USG')
                         ->where('status', '0')
                         ->get();
                     $area = '2';
@@ -103,7 +104,7 @@ class AppointmentController extends Controller
                 case '3':
                     $code_exp = CodePatient::select('code')
                         ->where('patient_id', $idpatient)
-                        ->where('nomenclature', 'DMO')
+                        ->where('nomenclature', 'MMO')
                         ->where('status', '0')
                         ->get();
                     $area = '3';
@@ -112,11 +113,27 @@ class AppointmentController extends Controller
                                 ->count();
                 break;
 
+                case '4':
+                    $code_exp = CodePatient::select('code')
+                        ->where('patient_id', $idpatient)
+                        ->where('nomenclature', 'DMO')
+                        ->where('status', '0')
+                        ->get();
+                    $area = '4';
+                    $appointments_odls = Appointment::where('patient_id', $idpatient)
+                                ->where('area',$area)
+                                ->count();
+                break;
+
             endswitch;
 
-            foreach($code_exp as $ce):
-                $code_assig = $ce->code;
-            endforeach;
+            if(count($code_exp) == 0):
+                $code_assig = "";
+            else:
+                foreach($code_exp as $ce):
+                    $code_assig = $ce->code;
+                endforeach;
+            endif;
 
             if($appointments_odls == '0'):
                 $appointments_type = '0';
@@ -129,7 +146,10 @@ class AppointmentController extends Controller
             $appointment = new Appointment;
             $appointment->patient_id = $idpatient;
             $appointment->date = $request->input('date');
-            $appointment->num_study = $code_assig;
+
+            if($code_assig != NULL):
+                $appointment->num_study = $code_assig;
+            endif;
             $appointment->type = $appointments_type;
             $appointment->area = $area;
             $appointment->status = '0';    
@@ -153,10 +173,13 @@ class AppointmentController extends Controller
 
             DB::commit();
 
-            if($appointment->save()):               
+            if($appointment->save()):  
+                foreach($affiliation_p as $ap):
+                    $afp = $ap->affiliation;
+                endforeach;
 
                 $b = new Bitacora;
-                $b->action = "Registro de cita para paciente con afiliación: ".$affiliation_p;
+                $b->action = "Registro de cita para paciente con afiliación: ".$afp;
                 $b->user_id = Auth::id();
                 $b->save();
 
@@ -185,26 +208,66 @@ class AppointmentController extends Controller
         if($appointment->save()):               
 
             $b = new Bitacora;
-            $b->action = "Reagendación de cita para paciente con afiliación: ";
+            $b->action = "Reprogamación de cita para paciente con afiliación: ".$appointment->patient->affiliation;
             $b->user_id = Auth::id();
             $b->save();
 
-            return redirect('/admin/appointments')->with('messages', '¡Cita reagendada y guardada con exito!.')
+            return redirect('/admin/appointments')->with('messages', '¡Cita reprogramada y guardada con exito!.')
                 ->with('typealert', 'success');
         endif;
     }
 
     public function getAppointmentPatientsStatus($id, $status){        
         $appointment = Appointment::findOrFail($id);
+        $patient = Patient::where('id', $appointment->patient_id)
+                        ->limit(1)
+                        ->get();
+        
+        switch($appointment->area):
+            case '0':
+                $nomen = 'RX';
+            break;
+
+            case '1':
+                $nomen = 'RX';
+            break;
+
+            case '2':
+                $nomen = 'USG';
+            break;
+
+            case '3':
+                $nomen = 'MMO';
+            break;
+
+            case '4':
+                $nomen = 'DMO';
+            break;
+        endswitch;
+        
+        $code_study = CodePatient::select('code')
+                        ->where('patient_id', $appointment->patient_id)
+                        ->where('nomenclature', $nomen)
+                        ->where('status', '0')
+                        ->limit(1)
+                        ->get();
+
+        foreach($code_study as $cs):
+            $num_exp = $cs->code;
+        endforeach;
+        
+        if($status == "1"):
+            $appointment->num_study = $num_exp;
+        endif;
         $appointment->status = $status;
 
         if($appointment->save()):               
 
             $b = new Bitacora;
             if($status == "1"):
-                $b->action = "Cita no. ".$appointment->id.", paciente presente";
+                $b->action = "Cita no. ".$appointment->id.", paciente con afiliación ".$appointment->patient->affiliation." presente";
             else:
-                $b->action = "Cita no. ".$appointment->id.", paciente ausente";
+                $b->action = "Cita no. ".$appointment->id.", paciente con afiliación ".$appointment->patient->affiliation." ausente";
             endif;            
             $b->user_id = Auth::id();
             $b->save();

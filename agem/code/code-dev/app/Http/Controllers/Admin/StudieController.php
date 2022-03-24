@@ -79,7 +79,7 @@ class StudieController extends Controller
                 $b->user_id = Auth::id();
                 $b->save();
 
-                return back()->with('messages', 'Creado y guardado con exito!.')
+                return back()->with('messages', '¡Estudio creado y guardado con exito!.')
                     ->with('typealert', 'success');
     		endif;
         endif;

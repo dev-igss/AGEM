@@ -145,7 +145,7 @@ class UserController extends Controller
             $b->user_id = Auth::id();
             $b->save();
 
-            return back()->with('messages', 'La información del usuario, se actualizo con éxito!.')
+            return back()->with('messages', '¡Información de usuario se actualizo con éxito!.')
                 ->with('typealert', 'success');
 
         endif;

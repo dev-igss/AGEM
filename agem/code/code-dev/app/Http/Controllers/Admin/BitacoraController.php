@@ -18,7 +18,11 @@ class BitacoraController extends Controller
 
     public function getBitacora(){
         $bitacoras = Bitacora::with(['user'])->orderBy('id', 'Desc')->get();
-        $data = ['bitacoras' => $bitacoras];
+
+        $data = [
+            'bitacoras' => $bitacoras
+        ];
+
         return view('admin.bitacoras.home',$data);
     }
 }

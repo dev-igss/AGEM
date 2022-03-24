@@ -48,6 +48,7 @@ class ServiceController extends Controller
             $sg->name = e($request->input('name'));
             $sg->unit_id = e($request->input('unit_id'));
             $sg->parent_id = '0';
+            $sg->type = '0';
 
             if($sg->save()):
                 $b = new Bitacora;
@@ -55,7 +56,7 @@ class ServiceController extends Controller
                 $b->user_id = Auth::id();
                 $b->save();
 
-                return back()->with('messages', 'Creado y guardado con exito!.')
+                return back()->with('messages', '¡Servicio general creado y guardado con exito!.')
                     ->with('typealert', 'success');
     		endif;
         endif;
@@ -92,7 +93,7 @@ class ServiceController extends Controller
                 $b->user_id = Auth::id();
                 $b->save();
 
-                return redirect('/admin/services_g')->with('messages', 'Actualizado y guardado con exito!.')
+                return redirect('/admin/services_g')->with('messages', '¡Servicio generla actualizado y guardado con exito!.')
                     ->with('typealert', 'success');
     		endif;
         endif;
@@ -128,14 +129,15 @@ class ServiceController extends Controller
             $s = new Service;
             $s->name = e($request->input('name'));
             $s->parent_id = $request->input('parent_id');
+            $s->type = '1'; 
 
             if($s->save()):
                 $b = new Bitacora;
-                $b->action = "Registro de servicio ".$s->name." del servicio general";
+                $b->action = "Registro de servicio ".$s->name." del servicio general ".$s->service_parent->name;
                 $b->user_id = Auth::id();
                 $b->save();
 
-                return back()->with('messages', 'Creado y guardado con exito!.')
+                return back()->with('messages', '¡Servicio creado y guardado con exito!.')
                     ->with('typealert', 'success');
     		endif;
         endif;
@@ -172,11 +174,11 @@ class ServiceController extends Controller
 
             if($s->save()):
                 $b = new Bitacora;
-                $b->action = "Actualizacion de servicio ".$s->name." del servicio general";
+                $b->action = "Actualización de datos de servicio ".$s->name." del servicio general ".$s->service_parent->name;
                 $b->user_id = Auth::id();
                 $b->save();
 
-                return back()->with('messages', 'Actualizado y guardado con exito!.')
+                return back()->with('messages', '¡Información del servicio actualizada y guardada con exito!.')
                     ->with('typealert', 'success');
     		endif;
         endif;

@@ -50,7 +50,7 @@ class UnitsController extends Controller
 
             if($u->save()):
                 $b = new Bitacora;
-                $b->action = "Creación de unidad ".$u->name;
+                $b->action = "Registro de unidad ".$u->name;
                 $b->user_id = Auth::id();
                 $b->save();
 
@@ -95,7 +95,7 @@ class UnitsController extends Controller
                 $b->user_id = Auth::id();
                 $b->save();
 
-                return back()->with('messages', '¡Unidad actualizada y guardada con exito!.')
+                return back()->with('messages', '¡Información de unidad actualizada y guardada con exito!.')
                     ->with('typealert', 'success');
             endif;
         endif;

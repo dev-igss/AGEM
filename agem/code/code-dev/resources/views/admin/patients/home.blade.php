@@ -32,7 +32,6 @@
                             <td><strong> APELLIDOS </strong></td>
                             <td><strong> NOMBRE </strong></td>                            
                             <td><strong> CONTACTO </strong></td>
-                            <td><strong> GENERO </strong></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,7 +54,6 @@
                                 <td>{{ $p->lastname }}</td>
                                 <td>{{ $p->name }}</td>                                
                                 <td>{{ $p->contact }}</td>
-                                <td>{{ getGenderPatient(null, $p->gender) }} </td>
                             </tr>
                         @endforeach
                     </tbody>

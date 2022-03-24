@@ -26,28 +26,35 @@ class ApiController extends Controller
 
         switch($exam):
             case 0:
-                $code_last = CodePatient::where('patient_id', $id_temp)
+                $code_temp_last = CodePatient::where('patient_id', $id_temp)
                     ->where('nomenclature', 'RX')
                     ->where('status', '0')
                     ->get();
             break;
 
             case 1:
-                $code_last = CodePatient::where('patient_id', $id_temp)
-                    ->where('nomenclature', 'USG')
+                $code_temp_last = CodePatient::where('patient_id', $id_temp)
+                    ->where('nomenclature', 'RX')
                     ->where('status', '0')
                     ->get();
             break;
 
             case 2:
-                $code_last = CodePatient::where('patient_id', $id_temp)
-                    ->where('nomenclature', 'MMO')
+                $code_temp_last = CodePatient::where('patient_id', $id_temp)
+                    ->where('nomenclature', 'USG')
                     ->where('status', '0')
                     ->get();
             break;
 
             case 3:
-                $code_last = CodePatient::where('patient_id', $id_temp)
+                $code_temp_last = CodePatient::where('patient_id', $id_temp)
+                    ->where('nomenclature', 'MMO')
+                    ->where('status', '0')
+                    ->get();
+            break;
+
+            case 4:
+                $code_temp_last = CodePatient::where('patient_id', $id_temp)
                     ->where('nomenclature', 'DMO')
                     ->where('status', '0')
                     ->get();
@@ -55,40 +62,69 @@ class ApiController extends Controller
 
         endswitch;
 
-        $appoinment_last = Appointment::where('patient_id', $id_temp)
+        if(count($code_temp_last) > 0):
+            $code_last = $code_temp_last;
+        else:
+            $code_last = [];
+        endif;
+
+
+        if($exam == "1"):
+            $appoinment_last = Appointment::where('patient_id', $id_temp)
+                ->where('area','0')
+                ->orderBy('created_at', 'desc')
+                ->limit(1)
+                ->get();
+        else:
+            $appoinment_last = Appointment::where('patient_id', $id_temp)
                 ->where('area',$exam)
                 ->orderBy('created_at', 'desc')
                 ->limit(1)
                 ->get();
-
-               
-        
+        endif;       
 
         if(count($appoinment_last) == 0):
             $service = "";            
             $studie = "";
 
-            $data = [
-                'patient' => $patient,
-                'code_last' => $code_last
-            ];
+            if(count($code_last) == 0):
+                
+                $data = [
+                    'patient' => $patient
+                ];
+            else:
+                $data = [
+                    'patient' => $patient,
+                    'code_last' => $code_last
+                ];
+            endif;
+
+            
 
         else:
             foreach($appoinment_last as $al):
                 $detalles = DetailAppointment::with(['service', 'study'])->where('idappointment', $al->id)->get(); 
-            endforeach;   
+            endforeach; 
+            
+            if(count($code_last) == 0):
+                $data = [
+                    'patient' => $patient,
+                    'appointment_last' => $appoinment_last,
+                    'detalles' => $detalles
+                ];
+            else:
+                
 
-            $data = [
-                'patient' => $patient,
-                'code_last' => $code_last,
-                'appointment_last' => $appoinment_last,
-                'detalles' => $detalles
-            ];
+                $data = [
+                    'patient' => $patient,
+                    'code_last' => $code_last,
+                    'appointment_last' => $appoinment_last,
+                    'detalles' => $detalles
+                ];
+            endif;
         endif;
 
-        
-
-        
+               
 
         
         

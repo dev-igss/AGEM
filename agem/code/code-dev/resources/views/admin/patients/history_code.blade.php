@@ -34,7 +34,7 @@
                                         <br>
                                         <small><strong>Creado ó Asignado: </strong> {{ date('d-m-Y', strtotime($crx->created_at)) }}</small>
                                     </li>         
-                                    <br>                       
+                                    <hr>                       
                                 @endforeach
                             </ul>
                         @else
@@ -63,7 +63,7 @@
                                         <br>
                                         <small><strong>Creado ó Asignado: </strong> {{ date('d-m-Y', strtotime($cusg->created_at)) }}</small>
                                     </li>         
-                                    <br>                       
+                                    <hr>                     
                                 @endforeach
                             </ul>
                         @else
@@ -95,7 +95,7 @@
                                         <br>
                                         <small><strong>Creado ó Asignado: </strong> {{ date('d-m-Y', strtotime($cmmo->created_at)) }}</small>
                                     </li>         
-                                    <br>                       
+                                    <hr>                      
                                 @endforeach
                             </ul>
                         @else
@@ -126,7 +126,7 @@
                                         <br>
                                         <small><strong>Creado ó Asignado: </strong> {{ date('d-m-Y', strtotime($cdmo->created_at)) }}</small>
                                     </li>         
-                                    <br>                       
+                                    <hr>                      
                                 @endforeach
                             </ul>
                         @else

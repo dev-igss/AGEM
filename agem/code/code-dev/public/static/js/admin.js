@@ -4,7 +4,6 @@ var base = location.protocol+'//'+location.host;
 var route = document.getElementsByName('routeName')[0].getAttribute('content');
 
 document.addEventListener('DOMContentLoaded', function(){
-
     var servicegeneral = document.getElementById('servicegeneral');
     var service = document.getElementById('service');
     var btn_add_patient_search = document.getElementById('btn_add_patient_search');
@@ -12,8 +11,6 @@ document.addEventListener('DOMContentLoaded', function(){
     var btn_generate_code_usg = document.getElementById('btn_generate_code_usg');
     var btn_generate_code_mmo = document.getElementById('btn_generate_code_mmo');
     var btn_generate_code_dmo = document.getElementById('btn_generate_code_dmo');
-
-
 
     if(btn_add_patient_search){
         btn_add_patient_search.addEventListener('click', function(e){
@@ -54,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function(){
         setServiceToEquipment();
         setEnvironmentToEquipment();
     }
-
 
     document.getElementsByClassName('lk-'+route)[0].classList.add('active');
 
@@ -156,10 +152,6 @@ document.addEventListener('DOMContentLoaded', function(){
         allowClear: true
     });
 
-
-
-
-
 });
 
 
@@ -172,7 +164,21 @@ function delete_object(e){
     var url = base + '/agem/public/' + path + '/' + object + '/' + action;
     //var url = base + '/' + path + '/' + object + '/' + action;
     var title, text, icon, date, status;
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
 
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+
+    if (mm < 10) {
+        mm = '0' + mm;
+    } 
+        
+    today = yyyy + '-' + mm + '-' + dd;
+    console.log(today);
     if(action == "reschedule"){
         title = '¿Esta seguro de '+'"Reagendar"'+' esta cita?';
         text = "Recuerde que esta acción no se podra realizar nuevamente.";
@@ -191,7 +197,7 @@ function delete_object(e){
         icon = "error";
     }
 
-    if(action == "reschedule"){
+    if(action == "reschedule"){ 
         Swal.fire({
             title: title,
             text: text,
@@ -199,10 +205,11 @@ function delete_object(e){
             confirmButtonText: 'Aceptar',
             cancelButtonText: 'Cancelar',
             showCancelButton: true,
-            html: '<input type="date" id="swal-input" class="swal2-input">',
+            html: '<input type="date" id="swal-input" class="swal2-input" min="'+today+'">',
             focusConfirm: false,
             allowOutsideClick: false,
             preConfirm: () => {
+                
                 return document.getElementById('swal-input').value;
             }
         }).then((result) =>{
@@ -250,7 +257,7 @@ function setInfoAddPatient(){
     var exam = document.getElementById('exam_b').value;
     var affiliation_b = document.getElementById('affiliation_b').value;
     var url = base + '/agem/public/admin/agem/api/load/add/patient/'+affiliation_b+'/'+exam;
-    //var url = base + '/admin/agem/api/load/add/patient/'+affiliation_b;
+    //var url = base + '/admin/agem/api/load/add/patient/'+affiliation_b+'/'+exam;
     var patient_id = document.getElementById('ppatient_id');
     var name = document.getElementById('ppatient_name');
     var lastname = document.getElementById('ppatient_lastname');
@@ -266,11 +273,15 @@ function setInfoAddPatient(){
         if(this.readyState == 4 && this.status == 200){
             var data = this.responseText;
             data = JSON.parse(data);
-            patient_id.value = data.patient[0].id;
-            name.value = data.patient[0].name;
-            lastname.value = data.patient[0].lastname;
-            contact.value = data.patient[0].contact;
-            code_last.value = data.code_last[0].code;
+            if('patient' in data){
+                patient_id.value = data.patient[0].id;
+                name.value = data.patient[0].name;
+                lastname.value = data.patient[0].lastname;
+                contact.value = data.patient[0].contact;
+            }            
+            if('code_last' in data){
+                code_last.value = data.code_last[0].code;
+            }
             console.log(data);
             if('appointment_last' in data){
                 date_al.value = data.appointment_last[0].date;
@@ -287,7 +298,7 @@ function setInfoAddPatient(){
             select = document.getElementById('studies');
             select.innerHTML = "";
             var url = base + '/agem/public/admin/agem/api/load/studies/'+exam;
-            //var url = base + '/agem/public/admin/agem/api/load/add/patient/'+affiliation_b+'/'+exam;
+            //var url = base + 'admin/agem/api/load/studies/'+exam;
             http.open('GET', url, true);
             http.setRequestHeader('X-CSRF-TOKEN', csrfToken);
             http.send();
@@ -312,11 +323,10 @@ function setInfoAddPatient(){
     }
 }
 
-
 function setGenerateCodeRx(){
     var nomenclatura = 'RX';
     var url = base + '/agem/public/admin/agem/api/load/generate/code/'+nomenclatura;
-    //var url = base + '/admin/agem/api/load/generate/code/rx/'+nomenclatura;
+    //var url = base + '/admin/agem/api/load/generate/code/'+nomenclatura;
     var num_rx = document.getElementById('pnum_rx');
     var nomenclature = document.getElementById('pnum_rx_nom');
     var correlative = document.getElementById('pnum_rx_cor');

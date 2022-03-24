@@ -15,6 +15,10 @@ class Service extends Model
     protected $table = 'services';
     protected $hidden = ['created_at', 'updated_at'];
 
+    public function service_parent(){
+        return $this->hasOne(Service::class,'id','parent_id');
+    }
+
     public function unit(){
         return $this->hasOne(Unit::class,'id','unit_id');
     }

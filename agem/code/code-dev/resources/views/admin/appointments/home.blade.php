@@ -28,6 +28,7 @@
                     <thead>
                         <tr>
                             <td><strong> OPCIONES </strong></td>
+                            <td width="48px"><strong> CORRELATIVO </strong></td>
                             <td><strong> FECHA </strong></td>
                             <td><strong> PACIENTE </strong></td>
                             <td><strong> ESTADO </strong></td>
@@ -40,7 +41,7 @@
                                 <div class="opts">
                                     @if(kvfj(Auth::user()->permissions, 'appointment_reschedule'))
                                         @if($a->status == '0')
-                                            <a href="#" data-action="reschedule" data-path="admin/appointment" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Reagendar"><i class="fas fa-calendar-alt"></i></a>
+                                            <a href="#" data-action="reschedule" data-path="admin/appointment" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Reagendar" id="btn_reprogramar"><i class="fas fa-calendar-alt"></i></a>
                                         @endif
                                     @endif
 
@@ -58,6 +59,7 @@
                                     @endif
                                 </div>
                                 </td>
+                                <td> {{ $a->id }} </td>
                                 <td>
                                     {{ $a->date }} <br>
                                     <small> {{ getTypeAppointment(null, $a->type)  }} </small>
@@ -87,5 +89,6 @@
 
         </div>
     </div>
+
 
 @endsection

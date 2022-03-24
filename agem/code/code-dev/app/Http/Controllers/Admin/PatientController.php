@@ -119,7 +119,7 @@ class PatientController extends Controller
                 $b->user_id = Auth::id();
                 $b->save();
 
-                return redirect('/admin/patients')->with('messages', '¡Creado y guardado con exito!.')
+                return redirect('/admin/patients')->with('messages', '¡Paciente creado y guardado con exito!.')
                     ->with('typealert', 'success');
     		endif;
         endif;
@@ -254,7 +254,7 @@ class PatientController extends Controller
                 $b->user_id = Auth::id();
                 $b->save();
 
-                return back()->with('messages', '¡Actualizado y guardado con exito!.')
+                return back()->with('messages', '¡Información de paciente actualizada y guardada con exito!.')
                     ->with('typealert', 'success');
     		endif;
         endif;
