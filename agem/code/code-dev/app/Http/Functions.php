@@ -218,6 +218,7 @@
                     'patient_list' => 'Puede ver el listado de pacientes.',
                     'patient_add' => 'Puede agregar pacientes.',
                     'patient_edit' => 'Puede editar pacientes.',
+                    'patient_edit_affiliation' => 'Puede editar la afiliación de los pacientes.',
                     'patient_history_exam' => 'Puede ver el historial de citas de pacientes.'
                 ]
             ],

@@ -11,6 +11,11 @@ document.addEventListener('DOMContentLoaded', function(){
     var btn_generate_code_usg = document.getElementById('btn_generate_code_usg');
     var btn_generate_code_mmo = document.getElementById('btn_generate_code_mmo');
     var btn_generate_code_dmo = document.getElementById('btn_generate_code_dmo');
+    var btn_manual_code_rx = document.getElementById('btn_manual_code_rx');
+    var btn_manual_code_usg = document.getElementById('btn_manual_code_usg');
+    var btn_manual_code_mmo = document.getElementById('btn_manual_code_mmo');
+    var btn_manual_code_dmo = document.getElementById('btn_manual_code_dmo');
+    var btn_update_affiliation = document.getElementById('btn_update_affiliation');
 
     if(btn_add_patient_search){
         btn_add_patient_search.addEventListener('click', function(e){
@@ -44,6 +49,41 @@ document.addEventListener('DOMContentLoaded', function(){
         btn_generate_code_dmo.addEventListener('click', function(e){
             e.preventDefault();
             setGenerateCodeDmo();
+        });
+    }
+
+    if(btn_manual_code_rx){
+        btn_manual_code_rx.addEventListener('click', function(e){
+            e.preventDefault();
+            document.getElementById("div_manual_code_rx").style.display = "block";
+        });
+    }
+
+    if(btn_manual_code_usg){
+        btn_manual_code_usg.addEventListener('click', function(e){
+            e.preventDefault();
+            document.getElementById("div_manual_code_usg").style.display = "block";
+        });
+    }
+
+    if(btn_manual_code_mmo){
+        btn_manual_code_mmo.addEventListener('click', function(e){
+            e.preventDefault();
+            document.getElementById("div_manual_code_mmo").style.display = "block";
+        });
+    }
+
+    if(btn_manual_code_dmo){
+        btn_manual_code_dmo.addEventListener('click', function(e){
+            e.preventDefault();
+            document.getElementById("div_manual_code_dmo").style.display = "block";
+        });
+    }
+
+    if(btn_update_affiliation){
+        btn_update_affiliation.addEventListener('click', function(e){
+            e.preventDefault();
+            document.getElementById("div_update_affiliation").style.display = "block";
         });
     }
    

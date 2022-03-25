@@ -21,25 +21,33 @@
                     </div>
 
                     <div class="inside">   
-                        <label for="name" class="mtop16"><strong>(*) Numero de Afiliacion: </strong></label>
+                        <label for="name" class="mtop16"><strong><sup style="color: red;">(*)</sup> Numero de Afiliacion: </strong></label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
                             {!! Form::text('affiliation', $patient->affiliation, ['class'=>'form-control', 'readonly']) !!}
+                            @if(kvfj(Auth::user()->permissions, 'patient_edit_affiliation'))
+                                <a href="#" class="btn btn-sm btn-primary " id="btn_update_affiliation" ><i class="fas fa-qrcode"></i> Actualizar</a>      
+                            @endif                      
                         </div>
 
-                        <label for="name" class="mtop16"><strong>(*) Nombre:</strong></label>
+                        <div id="div_update_affiliation" style="display: none; margin-top: 5px;">
+                            <label for="ibm" class="mtop16"><strong><sup style="color: red;">(*)</sup> Afiliación Nueva:</strong></label>
+                            {!! Form::text('update_affiliation', null, ['class'=>'form-control']) !!}                                                           
+                        </div> 
+
+                        <label for="name" class="mtop16"><strong><sup style="color: red;">(*)</sup> Nombre:</strong></label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
                             {!! Form::text('name', $patient->name, ['class'=>'form-control']) !!}
                         </div>
 
-                        <label for="name" class="mtop16"><strong>(*) Apellidos:</strong></label>
+                        <label for="name" class="mtop16"><strong><sup style="color: red;">(*)</sup> Apellidos:</strong></label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
                             {!! Form::text('lastname', $patient->lastname, ['class'=>'form-control']) !!}
                         </div>
 
-                        <label for="name" class="mtop16"><strong>(*) Unidad del Paciente:</strong></label>
+                        <label for="name" class="mtop16"><strong><sup style="color: red;">(*)</sup> Unidad del Paciente:</strong></label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
                             {!! Form::text('unit', $patient->unit->name, ['class'=>'form-control', 'readonly']) !!}
@@ -56,7 +64,11 @@
                     </div>
 
                     <div class="inside"> 
-                        
+                    <label for="name" class="mtop16"><strong>Genero:</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon1"><i class="fas fa-layer-group"></i></span>
+                            {!! Form::select('gender', getGenderPatient('list', null),$patient->gender,['class'=>'form-select']) !!}
+                        </div>
 
                         <label for="name" class="mtop16"><strong>Edad:</strong></label>
                         <div class="input-group">
@@ -70,7 +82,7 @@
                             {!! Form::date('birth', $patient->birth, ['class'=>'form-control']) !!}
                         </div>
 
-                        <label for="name" class="mtop16"><strong>(*) Numero de Contacto:</strong></label>
+                        <label for="name" class="mtop16"><strong>Numero de Contacto:</strong></label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
                             {!! Form::text('contact', $patient->contact, ['class'=>'form-control']) !!}
@@ -92,9 +104,29 @@
                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
                             {!! Form::text('num_rx', null, ['class'=>'form-control', 'id' => 'pnum_rx']) !!} 
                             <a href="#" class="btn btn-sm btn-primary " id="btn_generate_code_rx" ><i class="fas fa-qrcode"></i> Actualizar</a>
-                            {!! Form::hidden('num_rx_nom', null, ['class'=>'form-control', 'id' => 'pnum_rx_nom']) !!} 
-                            {!! Form::hidden('num_rx_cor', null, ['class'=>'form-control', 'id' => 'pnum_rx_cor']) !!} 
-                            {!! Form::hidden('num_rx_y', null, ['class'=>'form-control', 'id' => 'pnum_rx_y']) !!} 
+                            <a href="#" class="btn btn-sm btn-warning " id="btn_manual_code_rx" ><i class="fas fa-qrcode"></i> Actualización Manual</a>
+                            
+                            <div id="div_manual_code_rx" style="display: none; margin-top: 10px;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="ibm" class="mtop16"><strong><sup style="color: red;">(*)</sup> Nomenclatura:</strong></label>
+                                        {!! Form::text('num_rx_nom', null, ['class'=>'form-control', 'id' => 'pnum_rx_nom']) !!}
+                                    </div>
+
+                                    <div class="col-md-6"> 
+                                        <label for="ibm" class="mtop16"><strong><sup style="color: red;">(*)</sup> Correlativo:</strong></label>
+                                        {!! Form::text('num_rx_cor', null, ['class'=>'form-control', 'id' => 'pnum_rx_cor']) !!} 
+                                    </div>                                    
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">  
+                                        <label for="ibm" class="mtop16"><strong><sup style="color: red;">(*)</sup> Año:</strong></label>
+                                        {!! Form::text('num_rx_y', null, ['class'=>'form-control', 'id' => 'pnum_rx_y']) !!} 
+                                    </div>
+                                </div>
+                                
+                            </div> 
                         </div>
 
                         <label for="ibm" class="mtop16"><strong>Numero USG:</strong> @foreach($code_usg as $cusg) {{ $cusg->code }} @endforeach</label>
@@ -102,9 +134,29 @@
                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
                             {!! Form::text('num_usg', null, ['class'=>'form-control', 'id' => 'pnum_usg']) !!} 
                             <a href="#" class="btn btn-sm btn-primary " id="btn_generate_code_usg" ><i class="fas fa-qrcode"></i> Actualizar</a>
-                            {!! Form::hidden('num_usg_nom', null, ['class'=>'form-control', 'id' => 'pnum_usg_nom']) !!} 
-                            {!! Form::hidden('num_usg_cor', null, ['class'=>'form-control', 'id' => 'pnum_usg_cor']) !!} 
-                            {!! Form::hidden('num_usg_y', null, ['class'=>'form-control', 'id' => 'pnum_usg_y']) !!} 
+                            <a href="#" class="btn btn-sm btn-warning " id="btn_manual_code_usg" ><i class="fas fa-qrcode"></i> Actualización Manual</a>
+                            
+                            <div id="div_manual_code_usg" style="display: none; margin-top: 10px;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="ibm" class="mtop16"><strong><sup style="color: red;">(*)</sup> Nomenclatura:</strong></label>
+                                        {!! Form::text('num_usg_nom', null, ['class'=>'form-control', 'id' => 'pnum_usg_nom']) !!}
+                                    </div>
+
+                                    <div class="col-md-6"> 
+                                        <label for="ibm" class="mtop16"><strong><sup style="color: red;">(*)</sup> Correlativo:</strong></label>
+                                        {!! Form::text('num_usg_cor', null, ['class'=>'form-control', 'id' => 'pnum_usg_cor']) !!} 
+                                    </div>                                    
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">  
+                                        <label for="ibm" class="mtop16"><strong><sup style="color: red;">(*)</sup> Año:</strong></label>
+                                        {!! Form::text('num_usg_y', null, ['class'=>'form-control', 'id' => 'pnum_usg_y']) !!} 
+                                    </div>
+                                </div>
+                                
+                            </div> 
                         </div>
 
                         <label for="ibm" class="mtop16"><strong>Numero MMO:</strong> @foreach($code_mmo as $cmmo) {{ $cmmo->code }} @endforeach</label>
@@ -112,9 +164,29 @@
                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
                             {!! Form::text('num_mmo', null, ['class'=>'form-control', 'id' => 'pnum_mmo']) !!} 
                             <a href="#" class="btn btn-sm btn-primary " id="btn_generate_code_mmo" ><i class="fas fa-qrcode"></i> Actualizar</a>
-                            {!! Form::hidden('num_mmo_nom', null, ['class'=>'form-control', 'id' => 'pnum_mmo_nom']) !!} 
-                            {!! Form::hidden('num_mmo_cor', null, ['class'=>'form-control', 'id' => 'pnum_mmo_cor']) !!} 
-                            {!! Form::hidden('num_mmo_y', null, ['class'=>'form-control', 'id' => 'pnum_mmo_y']) !!} 
+                            <a href="#" class="btn btn-sm btn-warning " id="btn_manual_code_mmo" ><i class="fas fa-qrcode"></i> Actualización Manual</a>
+                            
+                            <div id="div_manual_code_mmo" style="display: none; margin-top: 10px;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="ibm" class="mtop16"><strong><sup style="color: red;">(*)</sup> Nomenclatura:</strong></label>
+                                        {!! Form::text('num_mmo_nom', null, ['class'=>'form-control', 'id' => 'pnum_mmo_nom']) !!}
+                                    </div>
+
+                                    <div class="col-md-6"> 
+                                        <label for="ibm" class="mtop16"><strong><sup style="color: red;">(*)</sup> Correlativo:</strong></label>
+                                        {!! Form::text('num_mmo_cor', null, ['class'=>'form-control', 'id' => 'pnum_mmo_cor']) !!} 
+                                    </div>                                    
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">  
+                                        <label for="ibm" class="mtop16"><strong><sup style="color: red;">(*)</sup> Año:</strong></label>
+                                        {!! Form::text('num_mmo_y', null, ['class'=>'form-control', 'id' => 'pnum_mmo_y']) !!} 
+                                    </div>
+                                </div>
+                                
+                            </div> 
                         </div>
 
                         <label for="ibm" class="mtop16"><strong>Numero DMO:</strong> @foreach($code_dmo as $cdmo) {{ $cdmo->code }} @endforeach</label>
@@ -122,9 +194,29 @@
                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
                             {!! Form::text('num_dmo', null, ['class'=>'form-control', 'id' => 'pnum_dmo']) !!} 
                             <a href="#" class="btn btn-sm btn-primary " id="btn_generate_code_dmo" ><i class="fas fa-qrcode"></i> Actualizar</a>
-                            {!! Form::hidden('num_dmo_nom', null, ['class'=>'form-control', 'id' => 'pnum_dmo_nom']) !!} 
-                            {!! Form::hidden('num_dmo_cor', null, ['class'=>'form-control', 'id' => 'pnum_dmo_cor']) !!} 
-                            {!! Form::hidden('num_dmo_y', null, ['class'=>'form-control', 'id' => 'pnum_dmo_y']) !!} 
+                            <a href="#" class="btn btn-sm btn-warning " id="btn_manual_code_dmo" ><i class="fas fa-qrcode"></i> Actualización Manual</a>
+                            
+                            <div id="div_manual_code_dmo" style="display: none; margin-top: 10px;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="ibm" class="mtop16"><strong><sup style="color: red;">(*)</sup> Nomenclatura:</strong></label>
+                                        {!! Form::text('num_dmo_nom', null, ['class'=>'form-control', 'id' => 'pnum_dmo_nom']) !!}
+                                    </div>
+
+                                    <div class="col-md-6"> 
+                                        <label for="ibm" class="mtop16"><strong><sup style="color: red;">(*)</sup> Correlativo:</strong></label>
+                                        {!! Form::text('num_dmo_cor', null, ['class'=>'form-control', 'id' => 'pnum_dmo_cor']) !!} 
+                                    </div>                                    
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">  
+                                        <label for="ibm" class="mtop16"><strong><sup style="color: red;">(*)</sup> Año:</strong></label>
+                                        {!! Form::text('num_dmo_y', null, ['class'=>'form-control', 'id' => 'pnum_dmo_y']) !!} 
+                                    </div>
+                                </div>
+                                
+                            </div> 
                         </div>
 
                         
