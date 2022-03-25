@@ -63,20 +63,30 @@ class PatientController extends Controller
             $p->lastname = e($request->input('lastname'));
             $p->unit_id = e($request->input('unit_id'));
             $p->age = $request->input('age');
-            $p->birth = $request->input('birth');
-            $p->contact = e($request->input('contact'));
-
-
-            
+            $p->birth = $request->input('birth'); 
+            $p->gender = $request->input('gender');
+            $p->contact = e($request->input('contact'));          
 
             if($p->save()):
                 if($request->input('num_rx') != ""):
                     $cp = new CodePatient;
-                    $cp->patient_id = $p->id;
+                    $cp->patient_id = $p->id;                                      
                     $cp->nomenclature = $request->input('num_rx_nom');
                     $cp->correlative = $request->input('num_rx_cor');
                     $cp->year = $request->input('num_rx_y');
                     $cp->code = $request->input('num_rx');
+                    $cp->status = '0';
+                    $cp->save();
+                endif;
+
+                if($request->input('num_rx') == "" && $request->input('num_rx_nom') != "" && $request->input('num_rx_cor') != "" && $request->input('num_rx_y') != "" ):
+                    $code_manual_rx = $request->input('num_rx_nom').$request->input('num_rx_cor').'-'.substr($request->input('num_rx_y'), -2);
+                    $cp = new CodePatient;
+                    $cp->patient_id = $p->id;                                      
+                    $cp->nomenclature = $request->input('num_rx_nom');
+                    $cp->correlative = $request->input('num_rx_cor');
+                    $cp->year = $request->input('num_rx_y');
+                    $cp->code = $code_manual_rx;
                     $cp->status = '0';
                     $cp->save();
                 endif;
@@ -92,6 +102,18 @@ class PatientController extends Controller
                     $cp->save();
                 endif;
 
+                if($request->input('num_usg') == "" && $request->input('num_usg_nom') != "" && $request->input('num_usg_cor') != "" && $request->input('num_usg_y') != ""):
+                    $code_manual_usg = $request->input('num_usg_nom').$request->input('num_usg_cor').'-'.substr($request->input('num_usg_y'), -2);
+                    $cp = new CodePatient;
+                    $cp->patient_id = $p->id;
+                    $cp->nomenclature = $request->input('num_usg_nom');
+                    $cp->correlative = $request->input('num_usg_cor');
+                    $cp->year = $request->input('num_usg_y');
+                    $cp->code = $code_manual_usg;
+                    $cp->status = '0';
+                    $cp->save();
+                endif;
+
                 if($request->input('num_mmo') != ""):
                     $cp = new CodePatient;
                     $cp->patient_id = $p->id;
@@ -103,6 +125,18 @@ class PatientController extends Controller
                     $cp->save();
                 endif;
 
+                if($request->input('num_mmo') == "" && $request->input('num_mmo_nom') != "" && $request->input('num_mmo_cor') != "" && $request->input('num_mmo_y') != ""):
+                    $code_manual_mmo = $request->input('num_mmo_nom').$request->input('num_mmo_cor').'-'.substr($request->input('num_mmo_y'), -2);
+                    $cp = new CodePatient;
+                    $cp->patient_id = $p->id;
+                    $cp->nomenclature = $request->input('num_mmo_nom');
+                    $cp->correlative = $request->input('num_mmo_cor');
+                    $cp->year = $request->input('num_mmo_y');
+                    $cp->code = $code_manual_mmo;
+                    $cp->status = '0';
+                    $cp->save();
+                endif;
+
                 if($request->input('num_dmo') != ""):
                     $cp = new CodePatient;
                     $cp->patient_id = $p->id;
@@ -110,6 +144,18 @@ class PatientController extends Controller
                     $cp->correlative = $request->input('num_dmo_cor');
                     $cp->year = $request->input('num_dmo_y');
                     $cp->code = $request->input('num_dmo');
+                    $cp->status = '0';
+                    $cp->save();
+                endif;
+
+                if($request->input('num_dmo') == "" && $request->input('num_dmo_nom') != "" && $request->input('num_dmo_cor') != "" && $request->input('num_dmo_y') != ""):
+                    $code_manual_dmo = $request->input('num_dmo_nom').$request->input('num_dmo_cor').'-'.substr($request->input('num_dmo_y'), -2);
+                    $cp = new CodePatient;
+                    $cp->patient_id = $p->id;
+                    $cp->nomenclature = $request->input('num_dmo_nom');
+                    $cp->correlative = $request->input('num_dmo_cor');
+                    $cp->year = $request->input('num_dmo_y');
+                    $cp->code = $code_manual_dmo;
                     $cp->status = '0';
                     $cp->save();
                 endif;
@@ -176,12 +222,16 @@ class PatientController extends Controller
     		return back()->withErrors($validator)->with('messages', 'Se ha producido un error.')->with('typealert', 'danger');
         else: 
             $p = Patient::findOrFail($id);
+            $affiliation_ant = $p->affiliation;
+            if($request->input('update_affiliation') != ""):
+                $p->affiliation = $request->input('update_affiliation');
+            endif;
             $p->name = e($request->input('name'));
             $p->lastname = e($request->input('lastname'));
+            $p->gender = $request->input('gender');
             $p->age = $request->input('age');
             $p->birth = $request->input('birth');
-            $p->contact = e($request->input('contact'));
-            $p->birth = $request->input('birth');
+            $p->contact = e($request->input('contact'));            
 
             if($p->save()):
 
@@ -201,6 +251,23 @@ class PatientController extends Controller
                     $cp_new->save();
                 endif;
 
+                if($request->input('num_rx') == "" && $request->input('num_rx_nom') != "" && $request->input('num_rx_cor') != "" && $request->input('num_rx_y') != "" ):
+                    $cp = CodePatient::where('patient_id', $p->id)
+                        ->where('nomenclature', 'RX')
+                        ->where('status', '0')    
+                        ->update(['status' => 1]);
+
+                    $code_manual_rx = $request->input('num_rx_nom').$request->input('num_rx_cor').'-'.substr($request->input('num_rx_y'), -2);
+                    $cp = new CodePatient;
+                    $cp->patient_id = $p->id;                                      
+                    $cp->nomenclature = $request->input('num_rx_nom');
+                    $cp->correlative = $request->input('num_rx_cor');
+                    $cp->year = $request->input('num_rx_y');
+                    $cp->code = $code_manual_rx;
+                    $cp->status = '0';
+                    $cp->save();
+                endif;
+
                 if($request->input('num_usg') != ""):
                     $cp = CodePatient::where('patient_id', $p->id)
                         ->where('nomenclature', 'USG')
@@ -215,6 +282,23 @@ class PatientController extends Controller
                     $cp_new->code = $request->input('num_usg');
                     $cp_new->status = '0';
                     $cp_new->save();
+                endif;
+
+                if($request->input('num_usg') == "" && $request->input('num_usg_nom') != "" && $request->input('num_usg_cor') != "" && $request->input('num_usg_y') != ""):
+                    $cp = CodePatient::where('patient_id', $p->id)
+                        ->where('nomenclature', 'USG')
+                        ->where('status', '0')    
+                        ->update(['status' => 1]);
+
+                    $code_manual_usg = $request->input('num_usg_nom').$request->input('num_usg_cor').'-'.substr($request->input('num_usg_y'), -2);
+                    $cp = new CodePatient;
+                    $cp->patient_id = $p->id;
+                    $cp->nomenclature = $request->input('num_usg_nom');
+                    $cp->correlative = $request->input('num_usg_cor');
+                    $cp->year = $request->input('num_usg_y');
+                    $cp->code = $code_manual_usg;
+                    $cp->status = '0';
+                    $cp->save();
                 endif;
 
                 if($request->input('num_mmo') != ""):
@@ -233,6 +317,23 @@ class PatientController extends Controller
                     $cp_new->save();
                 endif;
 
+                if($request->input('num_mmo') == "" && $request->input('num_mmo_nom') != "" && $request->input('num_mmo_cor') != "" && $request->input('num_mmo_y') != ""):
+                    $cp = CodePatient::where('patient_id', $p->id)
+                        ->where('nomenclature', 'MMO')
+                        ->where('status', '0')    
+                        ->update(['status' => 1]);
+
+                    $code_manual_mmo = $request->input('num_mmo_nom').$request->input('num_mmo_cor').'-'.substr($request->input('num_mmo_y'), -2);
+                    $cp = new CodePatient;
+                    $cp->patient_id = $p->id;
+                    $cp->nomenclature = $request->input('num_mmo_nom');
+                    $cp->correlative = $request->input('num_mmo_cor');
+                    $cp->year = $request->input('num_mmo_y');
+                    $cp->code = $code_manual_mmo;
+                    $cp->status = '0';
+                    $cp->save();
+                endif;
+
                 if($request->input('num_dmo') != ""):
                     $cp = CodePatient::where('patient_id', $p->id)
                         ->where('nomenclature', 'DMO')
@@ -249,8 +350,29 @@ class PatientController extends Controller
                     $cp_new->save();
                 endif;
 
+                if($request->input('num_dmo') == "" && $request->input('num_dmo_nom') != "" && $request->input('num_dmo_cor') != "" && $request->input('num_dmo_y') != ""):
+                    $cp = CodePatient::where('patient_id', $p->id)
+                        ->where('nomenclature', 'DMO')
+                        ->where('status', '0')    
+                        ->update(['status' => 1]);
+                        
+                    $code_manual_dmo = $request->input('num_dmo_nom').$request->input('num_dmo_cor').'-'.substr($request->input('num_dmo_y'), -2);
+                    $cp = new CodePatient;
+                    $cp->patient_id = $p->id;
+                    $cp->nomenclature = $request->input('num_dmo_nom');
+                    $cp->correlative = $request->input('num_dmo_cor');
+                    $cp->year = $request->input('num_dmo_y');
+                    $cp->code = $code_manual_dmo;
+                    $cp->status = '0';
+                    $cp->save();
+                endif;
+
                 $b = new Bitacora;
-                $b->action = "Actualización de datos del paciente con afiliacion: ".$p->afilliation;
+                if($request->input('update_affiliation') != ""):
+                    $b->action = "Actualización de datos del paciente con afiliacion: ".$affiliation_ant." a número de afiliación: ".$request->input('update_affiliation');
+                else:
+                    $b->action = "Actualización de datos del paciente con afiliacion: ".$affiliation_ant;
+                endif;                
                 $b->user_id = Auth::id();
                 $b->save();
 
