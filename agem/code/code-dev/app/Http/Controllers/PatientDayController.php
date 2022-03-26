@@ -40,17 +40,30 @@ class PatientDayController extends Controller
     }
 
     public function postMaterials(Request $request){
-        $ibm_tec = $request->get('ibm');
-        $tecnico = User::select('id','name','lastname')->where('ibm', $ibm_tec)->limit(1)->get();
+        $ibm_tec1 = $request->get('ibm1');
+        $tecnico1 = User::select('id','name','lastname')->where('ibm', $ibm_tec1)->limit(1)->get();
         
-        foreach($tecnico as $tec):
-            $id_tec = $tec->id;
-            $name_tec = $tec->name.' '.$tec->lastname;
+        foreach($tecnico1 as $tec1):
+            $id_tec1 = $tec1->id;
+            $name_tec1 = $tec1->name.' '.$tec1->lastname;
         endforeach;
+
+        if($request->get('ibm2') != ""):
+            $ibm_tec2 = $request->get('ibm2');
+            $tecnico2 = User::select('id','name','lastname')->where('ibm', $ibm_tec2)->limit(1)->get();
+            
+            foreach($tecnico2 as $tec2):
+                $id_tec2 = $tec2->id;
+                $name_tec2 = $tec2->name.' '.$tec2->lastname;
+            endforeach;
+        endif;
 
         $cita = Appointment::findOrFail($request->get('appointmentid'));
         $cita->status = '3';
-        $cita->idtecnico = $id_tec;
+        $cita->ibm_tecnico_1 = $id_tec1;
+        if($request->get('ibm2') != ""):
+            $cita->ibm_tecnico_2 = $id_tec2;
+        endif;
         $cita->save();
 
         $idappointment = $request->get('idappointment');
@@ -72,8 +85,12 @@ class PatientDayController extends Controller
         if($materials->save()):     
             
             $b = new Bitacora;
-            $b->action = "Tecnico ".$name_tec." finalizo atención de la cita no. ".$cita->id;
-            $b->user_id = $id_tec;
+            if($request->get('ibm2') != ""):
+                $b->action = "Tecnicos ".$name_tec1." y ".$name_tec2." finalizarón atención de la cita no. ".$cita->id;
+            else:
+                $b->action = "Tecnico ".$name_tec1." finalizo atención de la cita no. ".$cita->id;
+            endif;
+            $b->user_id = $id_tec1;
             $b->save();
 
             return redirect('/patients_days')->with('messages', '¡Registro de Materiales Exitos!.')

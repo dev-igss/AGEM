@@ -75,7 +75,12 @@
                                     @if($a->status == '3')
                                         <p>
                                             <small style=" font-size: 0.95em;">
-                                                <strong >Tecnico: </strong> {{ $a->tecnico->name.' '.$a->tecnico->lastname }}
+                                                @if($a->ibm_tecnico_2 == NULL)
+                                                    <strong >Tecnico: </strong> {{ $a->tecnico1->name.' '.$a->tecnico1->lastname }}
+                                                @else
+                                                    <strong >Tecnicos: </strong> {{ $a->tecnico1->name.' '.$a->tecnico1->lastname }} <br>
+                                                    {{ $a->tecnico2->name.' '.$a->tecnico2->lastname }}
+                                                @endif
                                             </small>
                                         </p>
                                     @endif

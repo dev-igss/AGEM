@@ -27,7 +27,11 @@ class Appointment extends Model
         return $this->hasOne(Studie::class,'id','study_id');
     }
 
-    public function tecnico(){
-        return $this->hasOne(User::class,'id','idtecnico');
+    public function tecnico1(){
+        return $this->hasOne(User::class,'id','ibm_tecnico_1');
+    }
+
+    public function tecnico2(){
+        return $this->hasOne(User::class,'id','ibm_tecnico_2');
     }
 }

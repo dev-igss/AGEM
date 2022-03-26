@@ -101,12 +101,29 @@
 
             <div class="col-md-8" id="btn_guardar">
                 <div class="panel shadow">
+                    <div class="header">
+                        <h2 class="title"><i class="fas fa-file-prescription"></i><strong> IBM Tecnico Ó Tecnios Que Realizarón El Estudio</strong></h2>
+                    </div>
                     <div class="inside">
-                        <label for="name" ><strong> Tecnico Que Atendió:</strong></label>
-                        <div class="input-group">
-                            <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
-                            {!! Form::text('ibm', null, ['class'=>'form-control']) !!}                             
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="name" ><strong> Tecnico No.1:</strong></label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
+                                    {!! Form::text('ibm1', null, ['class'=>'form-control']) !!}                             
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="name" ><strong> Tecnico No.2:</strong></label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
+                                    {!! Form::text('ibm2', null, ['class'=>'form-control']) !!}                             
+                                </div>
+                            </div>
+
                         </div>
+                        
                         <p><small style="font-size: 0.95em; color:red; margin-left: 75px; font-weight: bold;" >¡Verifique los datos antes de guardar, estos no podrán ser modificados después.!</small></p>
                         <br>
                         {!! Form::submit('Guardar', ['class'=>'btn btn-success']) !!}
