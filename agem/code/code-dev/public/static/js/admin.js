@@ -201,8 +201,8 @@ function delete_object(e){
     var object = this.getAttribute('data-object');
     var action = this.getAttribute('data-action');
     var path = this.getAttribute('data-path');
-    var url = base + '/agem/public/' + path + '/' + object + '/' + action;
-    //var url = base + '/' + path + '/' + object + '/' + action;
+    //var url = base + '/agem/public/' + path + '/' + object + '/' + action;
+    var url = base + '/' + path + '/' + object + '/' + action;
     var title, text, icon, date, status;
     var today = new Date();
     var dd = today.getDate();
@@ -296,8 +296,8 @@ function delete_object(e){
 function setInfoAddPatient(){
     var exam = document.getElementById('exam_b').value;
     var affiliation_b = document.getElementById('affiliation_b').value;
-    var url = base + '/agem/public/admin/agem/api/load/add/patient/'+affiliation_b+'/'+exam;
-    //var url = base + '/admin/agem/api/load/add/patient/'+affiliation_b+'/'+exam;
+    //var url = base + '/agem/public/admin/agem/api/load/add/patient/'+affiliation_b+'/'+exam;
+    var url = base + '/admin/agem/api/load/add/patient/'+affiliation_b+'/'+exam;
     var patient_id = document.getElementById('ppatient_id');
     var name = document.getElementById('ppatient_name');
     var lastname = document.getElementById('ppatient_lastname');
@@ -337,8 +337,8 @@ function setInfoAddPatient(){
             var studies_actual = document.getElementById('studies_actual').value;
             select = document.getElementById('studies');
             select.innerHTML = "";
-            var url = base + '/agem/public/admin/agem/api/load/studies/'+exam;
-            //var url = base + 'admin/agem/api/load/studies/'+exam;
+            //var url = base + '/agem/public/admin/agem/api/load/studies/'+exam;
+            var url = base + '/admin/agem/api/load/studies/'+exam;
             http.open('GET', url, true);
             http.setRequestHeader('X-CSRF-TOKEN', csrfToken);
             http.send();
@@ -365,8 +365,8 @@ function setInfoAddPatient(){
 
 function setGenerateCodeRx(){
     var nomenclatura = 'RX';
-    var url = base + '/agem/public/admin/agem/api/load/generate/code/'+nomenclatura;
-    //var url = base + '/admin/agem/api/load/generate/code/'+nomenclatura;
+    //var url = base + '/agem/public/admin/agem/api/load/generate/code/'+nomenclatura;
+    var url = base + '/admin/agem/api/load/generate/code/'+nomenclatura;
     var num_rx = document.getElementById('pnum_rx');
     var nomenclature = document.getElementById('pnum_rx_nom');
     var correlative = document.getElementById('pnum_rx_cor');
@@ -389,8 +389,8 @@ function setGenerateCodeRx(){
 
 function setGenerateCodeUsg(){
     var nomenclatura = 'USG';
-    var url = base + '/agem/public/admin/agem/api/load/generate/code/'+nomenclatura;
-    //var url = base + '/admin/agem/api/load/generate/code/'+nomenclatura;
+    //var url = base + '/agem/public/admin/agem/api/load/generate/code/'+nomenclatura;
+    var url = base + '/admin/agem/api/load/generate/code/'+nomenclatura;
     var num_usg = document.getElementById('pnum_usg');
     var nomenclature = document.getElementById('pnum_usg_nom');
     var correlative = document.getElementById('pnum_usg_cor');
@@ -413,8 +413,8 @@ function setGenerateCodeUsg(){
 
 function setGenerateCodeMmo(){
     var nomenclatura = 'MMO';
-    var url = base + '/agem/public/admin/agem/api/load/generate/code/'+nomenclatura;
-    //var url = base + '/admin/agem/api/load/generate/code/'+nomenclatura;
+    //var url = base + '/agem/public/admin/agem/api/load/generate/code/'+nomenclatura;
+    var url = base + '/admin/agem/api/load/generate/code/'+nomenclatura;
     var num_mmo = document.getElementById('pnum_mmo');
     var nomenclature = document.getElementById('pnum_mmo_nom');
     var correlative = document.getElementById('pnum_mmo_cor');
@@ -437,8 +437,8 @@ function setGenerateCodeMmo(){
 
 function setGenerateCodeDmo(){
     var nomenclatura = 'DMO';
-    var url = base + '/agem/public/admin/agem/api/load/generate/code/'+nomenclatura;
-    //var url = base + '/admin/agem/api/load/generate/code/'+nomenclatura;
+    //var url = base + '/agem/public/admin/agem/api/load/generate/code/'+nomenclatura;
+    var url = base + '/admin/agem/api/load/generate/code/'+nomenclatura;
     var num_dmo = document.getElementById('pnum_dmo');
     var nomenclature = document.getElementById('pnum_dmo_nom');
     var correlative = document.getElementById('pnum_dmo_cor');
@@ -458,5 +458,4 @@ function setGenerateCodeDmo(){
         }
     }
 }
-
 
