@@ -14,7 +14,8 @@
                         </div>
                         <div class="card-body"> 
                             
-                            <h6 class="card-title" style="margin-top:-15px;"> <strong> {{ $a->patient->name.' '.$a->patient->lastname }} </strong></h6>        
+                            <h6 class="card-title" style="margin-top:-15px;"> <strong> {{ $a->patient->lastname.' '.$a->patient->name}} </strong></h6>   
+                            <p class="card-text" style="margin-top:-15px;"><small> <strong>Edad: </strong> {{ $a->age.'a -'.getGenderPatient(null, $a->gender) }}</small></p>        
                             <p class="card-text" style="margin-top:-15px;"><small> <strong>Expediente: </strong> {{ $a->num_study }}</small></p>     
                             <p class="card-text">
                                 <small> 
@@ -29,7 +30,10 @@
                                         @endif
                                     @endforeach
                                 </small>
-                            </p>                              
+                            </p>    
+                            <p class="card-text">
+                                <small><strong>Servicio Solicitante: </strong> {{ $a->service->name }}</small>
+                            </p>                           
                         </div>
                         <div class="card-footer text-muted">
                             <a href="{{ url('/patients_days/'.$a->id.'/materials') }}" data-action="materials" >Concluir Cita</a>

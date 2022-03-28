@@ -113,7 +113,8 @@
             '4' => 'Fotos',
             '5' => 'Hojas',
             '6' => 'Pelicula 8x10',
-            '7' => 'Pelicula 10x12'
+            '7' => 'Pelicula 10x12',
+            '8' => 'Singoplaza'
         ];
 
         if(!is_null($mode)):
