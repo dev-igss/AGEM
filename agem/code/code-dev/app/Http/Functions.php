@@ -6,7 +6,8 @@
             '1' => 'Administrador',
             '2' => 'Encargado de Área',
             '3' => 'Técnico',
-            '4' => 'Secretaria'
+            '4' => 'Secretaria',
+            '5' => 'Medico'
         ];
 
         if(!is_null($mode)):
