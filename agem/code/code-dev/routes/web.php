@@ -16,13 +16,14 @@ use Illuminate\Support\Facades\Route;
 
 
 //RUTAS DE Autentificacion
-Route::get('/login','ConnectController@getLogin')->name('login');
-Route::post('/login','ConnectController@postLogin')->name('login');
+Route::get('/inicio_sesion','ConnectController@getLogin')->name('login');
+Route::post('/inicio_sesion','ConnectController@postLogin')->name('login');
 Route::get('/logout','ConnectController@getLogout')->name('logout');
 
-Route::get('/patients_days', 'PatientDayController@getPatientDay')->name('patient_day');
-Route::get('/patients_days/{id}/materials', 'PatientDayController@getMaterials')->name('materials');
-Route::post('/patients_days/materials', 'PatientDayController@postMaterials')->name('materials');
+Route::get('/citas_del_dia_rx', 'PatientDayController@getPatientDayRx')->name('patient_day');
+Route::get('/citas_del_dia_umd', 'PatientDayController@getPatientDayUmd')->name('patient_day');
+Route::get('/citas_del_dia/{id}/materiales', 'PatientDayController@getMaterials')->name('materials');
+Route::post('/citas_del_dia/materiales', 'PatientDayController@postMaterials')->name('materials');
 
 //Request Ajax
 Route::get('/agem/api/load/name/study/{id}', 'ApiController@getStudyName');

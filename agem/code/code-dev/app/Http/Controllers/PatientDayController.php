@@ -9,20 +9,40 @@ use Carbon\Carbon;
 
 class PatientDayController extends Controller
 {
-    public function getPatientDay(){
+    public function getPatientDayRx(){
         $today = Carbon::now()->format('Y-m-d');
         $appointments = Appointment::where('date',$today)
+                    ->where('area', '0')
                     ->where('status', '1')
                     ->get();
         $detalles = DetailAppointment::all();
        
-
+        $date = Carbon::now()->format('d-m-Y');
         $data = [
             'appointments' => $appointments,
-            'detalles' => $detalles
+            'detalles' => $detalles,
+            'date' => $date
         ];
 
-        return view('patients_day.home', $data);
+        return view('patients_day.home_rx', $data);
+    }
+
+    public function getPatientDayUmd(){
+        $today = Carbon::now()->format('Y-m-d');
+        $appointments = Appointment::where('date',$today)
+                    ->whereIn('area', ['2', '3', '4'])                   
+                    ->where('status', '1')
+                    ->get();
+        $detalles = DetailAppointment::all();
+       
+        $date = Carbon::now()->format('d-m-Y');
+        $data = [
+            'appointments' => $appointments,
+            'detalles' => $detalles,
+            'date' => $date
+        ];
+
+        return view('patients_day.home_umd', $data);
     }
 
     public function getMaterials($id){

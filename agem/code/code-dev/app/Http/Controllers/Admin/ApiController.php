@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Http\Models\Patient, App\Http\Models\CodePatient, App\Http\Models\Appointment, App\Http\Models\DetailAppointment, App\Http\Models\Service, App\Http\Models\Studie;
-use Carbon\Carbon;
+use Carbon\Carbon, DB;
 
 class ApiController extends Controller
 {
@@ -16,7 +16,6 @@ class ApiController extends Controller
     }
 
     public function getPatient($code, $exam){
-
         $patient = Patient::where('affiliation', $code)
             ->get();
 
@@ -170,5 +169,38 @@ class ApiController extends Controller
         return response()->json($studies);
     }
 
+    public function getAppointments($date, $area){
+        
+        $citas = Appointment::where('date', $date)
+                ->where('area',$area)
+                ->count();
+        //return $citas;
+        return response()->json($citas);
+    }
+
+    public function getSchedule($date, $area){
+        $cant_citas = Appointment::select(DB::raw('schedule_id, count(*) as total'))
+                    ->where('date', $date)
+                    ->where('area', $area)
+                    ->groupBy('schedule_id')
+                    ->get();
+
+        //return $cant_citas;
+        return response()->json($cant_citas);
+    }
+
+    public function getAppointmentsView(){
+        $appointments = DB::table('appointments')
+                        ->join('patients', 'appointments.patient_id', '=', 'patients.id')
+                        ->join('schedule', 'appointments.schedule_id', '=', 'schedule.id')
+                        ->select(DB::raw('CONCAT(patients.lastname,  \', \' , patients.name) AS title'), DB::raw('CONCAT(appointments.date,  \' \' , schedule.hour_in) AS start'), DB::raw('CONCAT(appointments.date,  \' \' , schedule.hour_out) AS end'), DB::raw('appointments.area AS area'))
+                        ->get();
+        return $appointments;
+        $data = [
+           'appointments' => $appointments
+        ];
+
+        return response()->json($data);
+    }
     
 }

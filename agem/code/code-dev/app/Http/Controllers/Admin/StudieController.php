@@ -40,7 +40,7 @@ class StudieController extends Controller
                 $studies = Studie::where('type', '4')->orderby('id','Asc')->get();
             break;
 
-            case 'all':
+            case 'todos':
                 $studies = Studie::orderby('id','Asc')->get();
             break;
         }

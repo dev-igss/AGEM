@@ -13,11 +13,11 @@
         <div class="col-md-4">
             <div class="panel shadow">
                 <div class="header">
-                    <h2 class="title"><i class="fas fa-fingerprint"></i> Cambiar Contraseña</h2>
+                    <h2 class="title"><i class="fas fa-fingerprint"></i> <strong>Cambiar Contraseña</strong></h2>
                 </div>
 
                 <div class="inside">
-                    {!! Form::open(['url' => '/admin/user/account/chance/password']) !!}
+                    {!! Form::open(['url' => '/admin/user/cuenta/cambiar/contrasena']) !!}
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="name"><strong>Contraseña Actual:</strong></label>
@@ -61,10 +61,10 @@
         <div class="col-md-8">
             <div class="panel shadow">
                 <div class="header">
-                    <h2 class="title"><i class="fas fa-address-card"></i> Información del Usuario</h2>
+                    <h2 class="title"><i class="fas fa-address-card"></i> <strong>Información del Usuario</strong></h2>
                 </div>
                 <div class="inside">
-                    {!! Form::open(['url'=>'/account/edit/info']) !!}
+                    {!! Form::open(['url'=>'/cuenta/informacion/editar']) !!}
                         <div class="row">
 
                             <div class="col-md-4">

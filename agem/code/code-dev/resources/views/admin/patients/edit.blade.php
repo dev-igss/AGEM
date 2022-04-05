@@ -12,7 +12,7 @@
 
 @section('content')
     <div class="container-fluid">
-        {!! Form::open(['url'=>'/admin/patient/'.$patient->id.'/edit']) !!}
+        {!! Form::open(['url'=>'/admin/paciente/'.$patient->id.'/editar']) !!}
         <div class="row">
             <div class="col-md-4 d-flex">
                 <div class="panel shadow">

@@ -56,10 +56,10 @@ class ConnectController extends Controller
         Auth::logout();
 
         if($status == "0"):
-            return redirect('/login')->with('message', 'Su usuario fue suspéndido.')
+            return redirect('/inicio_sesion')->with('message', 'Su usuario fue suspéndido.')
             ->with('typealert', 'danger');
         else:
-            return redirect('/login');
+            return redirect('/inicio_sesion');
         endif;
         
     }

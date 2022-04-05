@@ -3,7 +3,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item">
-        <a href="{{ url('/admin/patients') }}" class="nav-link"><i class="fas fa-calendar-alt"></i> Citas</a>
+        <a href="{{ url('/admin/citas') }}" class="nav-link"><i class="fas fa-calendar-alt"></i> Citas</a>
     </li>
 @endsection
 
@@ -16,7 +16,12 @@
                 <ul>
                     @if(kvfj(Auth::user()->permissions, 'patient_add'))
                         <li>
-                            <a href="{{ url('/admin/appointment/add') }}" ><i class="fas fa-plus-circle"></i> Agendar Cita</a>
+                            <a href="{{ url('/admin/cita/calendario') }}" ><i class="fa fa-calendar"></i> Ver Calendario</a>
+                        </li>
+                    @endif
+                    @if(kvfj(Auth::user()->permissions, 'patient_add'))
+                        <li>
+                            <a href="{{ url('/admin/cita/agregar') }}" ><i class="fas fa-plus-circle"></i> Agendar Cita</a>
                         </li>
                     @endif
                 </ul>
@@ -28,7 +33,6 @@
                     <thead>
                         <tr>
                             <td><strong> OPCIONES </strong></td>
-                            <td width="48px"><strong> CORRELATIVO </strong></td>
                             <td><strong> FECHA </strong></td>
                             <td><strong> PACIENTE </strong></td>
                             <td><strong> ESTADO </strong></td>
@@ -41,37 +45,43 @@
                                 <div class="opts">
                                     @if(kvfj(Auth::user()->permissions, 'appointment_reschedule'))
                                         @if($a->status == '0')
-                                            <a href="#" data-action="reschedule" data-path="admin/appointment" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Reagendar" id="btn_reprogramar"><i class="fas fa-calendar-alt"></i></a>
+                                            <a href="#" data-action="reprogramar" data-path="admin/cita" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Reprogramación" ><i class="fas fa-calendar-alt"></i></a>
+                                        @endif
+                                        @if($a->status == '1')
+                                            <a href="#" data-action="reprogramacion_forzada" data-path="admin/cita" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Reprogramación Forzada" ><i class="fas fa-calendar-alt"></i></a>
                                         @endif
                                     @endif
 
                                     @if(kvfj(Auth::user()->permissions, 'appointment_patients_status'))
                                         @if($a->status == '0' || $a->status == '4')
-                                            <a href="#" data-action="patients_in" data-path="admin/appointment" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Paciente Presente"><i class="fas fa-calendar-check"></i></a>
-                                            <a href="#" data-action="patients_out" data-path="admin/appointment" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Paciente Ausente"><i class="fas fa-calendar-times"></i></a>
+                                            <a href="#" data-action="paciente_presente" data-path="admin/cita" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Paciente Presente"><i class="fas fa-calendar-check"></i></a>
+                                            <a href="#" data-action="paciente_ausente" data-path="admin/cita" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Paciente Ausente"><i class="fas fa-calendar-times"></i></a>
                                         @endif
                                     @endif
 
                                     @if(kvfj(Auth::user()->permissions, 'appointment_materials'))
                                         @if($a->status == '3')
-                                            <a href="{{ url('/admin/appointment/'.$a->id.'/materials') }}"  title="Materiales Usados" ><i class="fas fa-x-ray"></i></a>
+                                            <a href="{{ url('/admin/cita/'.$a->id.'/materiales') }}"  title="Materiales Usados" ><i class="fas fa-x-ray"></i></a>
                                         @endif
                                     @endif
                                 </div>
                                 </td>
-                                <td> {{ $a->id }} </td>
                                 <td>
-                                    {{ $a->date }} <br>
+                                    {{ \Carbon\Carbon::parse($a->date)->format('d-m-Y') }} <br>
+                                    @if($a->schedule_id != NULL)
+                                        <small><strong>Horario: </strong> {{ \Carbon\Carbon::parse($a->schedule->hour_in)->format('H:i').' '.getHourType(null, $a->schedule->type) }}</small><br>
+                                    @else
+                                        <small><strong>Horario: </strong> Sin Asignar</small><br>
+                                    @endif
                                     <small> {{ getTypeAppointment(null, $a->type)  }} </small>
                                 </td>
                                 <td> 
-                                    <span>AF. {{ $a->patient->affiliation }}</span> <br>
                                     {{ $a->patient->name.' '.$a->patient->lastname }} <br>
+                                    <span>AF. {{ $a->patient->affiliation }}</span> <br>                                    
                                     <small>Expediente. {{ $a->num_study }}</small>
                                 </td>
                                 <td>
-                                    {{ getStatusAppointment(null, $a->status)  }}
-                                    
+                                    {{ getStatusAppointment(null, $a->status)  }}                                    
                                     @if($a->status == '3')
                                         <p>
                                             <small style=" font-size: 0.95em;">
@@ -84,7 +94,6 @@
                                             </small>
                                         </p>
                                     @endif
-
                                 </td>
                             </tr>
                         @endforeach

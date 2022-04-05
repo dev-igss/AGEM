@@ -3,7 +3,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item">
-        <a href="{{ url('/admin/units') }}" class="nav-link"><i class="fas fa-hospital-user"></i> Unidades</a>
+        <a href="{{ url('/admin/unidades') }}" class="nav-link"><i class="fas fa-hospital-user"></i> Unidades</a>
     </li>
 @endsection
 
@@ -14,11 +14,11 @@
                 @if(kvfj(Auth::user()->permissions, 'unit_add'))
                     <div class="panel shadow">
                         <div class="header">
-                            <h2 class="title"><i class="fas fa-plus-circle"></i> Agregar Unidad</h2>
+                            <h2 class="title"><i class="fas fa-plus-circle"></i><strong> Agregar Unidad</strong></h2>
                         </div>
 
                         <div class="inside">
-                            {!! Form::open(['url' => '/admin/unit/add', 'files' => true]) !!}
+                            {!! Form::open(['url' => '/admin/unidad/agregar', 'files' => true]) !!}
                                 <label for="name"><strong><sup style="color: red;">(*)</sup> Nombre de Unidad:</strong> </label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
@@ -52,7 +52,7 @@
             <div class="col-md-8">
                 <div class="panel shadow">
                     <div class="header">
-                        <h2 class="title"><i class="fas fa-hospital-user"></i> Unidades Hospitalarias </a>
+                        <h2 class="title"><i class="fas fa-hospital-user"></i><strong> Unidades Hospitalarias </strong></a>
                     </div>
 
                     <div class="inside">
@@ -70,10 +70,10 @@
                                         <td>
                                         <div class="opts">
                                             @if(kvfj(Auth::user()->permissions, 'unit_edit'))
-                                                <a href="{{ url('/admin/unit/'.$unit->id.'/edit') }}" data-toogle="tooltrip" data-placement="top" title="Editar"><i class="fas fa-edit"></i></a>
+                                                <a href="{{ url('/admin/unidad/'.$unit->id.'/editar') }}" data-toogle="tooltrip" data-placement="top" title="Editar"><i class="fas fa-edit"></i></a>
                                             @endif
                                             @if(kvfj(Auth::user()->permissions, 'unit_delete'))
-                                                <a href="{{ url('/admin/unit/'.$unit->id.'/delete') }}" data-toogle="tooltrip" data-placement="top" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
+                                                <a href="{{ url('/admin/unidad/'.$unit->id.'/borrar') }}" data-toogle="tooltrip" data-placement="top" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
                                             @endif
                                         </div>
                                         </td>

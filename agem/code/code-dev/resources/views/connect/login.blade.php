@@ -12,7 +12,7 @@
         </div>
 
         <div class="inside">
-            {!! Form::open(['url' => '/login']) !!}
+            {!! Form::open(['url' => '/inicio_sesion']) !!}
 
             <label for="ibm"><b>IBM</b></label>
             <div class="input-group">
@@ -53,7 +53,7 @@
             @endif
 
             <div class="footer mtop16">
-                <!-- <a href="{{url('/recover')}}">Recuperar Contraseña</a> -->
+                <a href="{{url('/citas_del_dia')}}"><i class="fa fa-arrow-left"></i> Regresar</a> 
             </div>
         </div>
 

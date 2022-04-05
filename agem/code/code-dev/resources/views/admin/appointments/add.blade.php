@@ -1,5 +1,5 @@
 @extends('admin.master')
-@section('title','Agregar Paciente')
+@section('title','Agendar Cita')
 
 @section('breadcrumb')
     <li class="breadcrumb-item">
@@ -12,7 +12,7 @@
 
 @section('content')
     <div class="container-fluid">
-        {!! Form::open(['url'=>'/admin/appointment/add']) !!}
+        {!! Form::open(['url'=>'/admin/cita/agregar']) !!}
         <div class="row">
             <div class="col-md-4 d-flex">
                 <div class="panel shadow">
@@ -128,17 +128,27 @@
                     </div>
 
                     <div class="inside"> 
-                        <label for="name" ><strong> Fecha de Cita:</strong></label>
-                        <div class="input-group">
-                            <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
-                            {!! Form::text('date_al', null, ['class'=>'form-control', 'id' => 'date_al', 'readonly']) !!} 
-                        </div>
 
-                        <label for="name" class="mtop16"><strong> Numero de Expediente:</strong></label>
-                        <div class="input-group">
-                            <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
-                            {!! Form::text('numexp_al', null, ['class'=>'form-control', 'id' => 'numexp_al', 'readonly']) !!}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="name" ><strong> Fecha de Cita:</strong></label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
+                                    {!! Form::text('date_al', null, ['class'=>'form-control', 'id' => 'date_al', 'readonly']) !!} 
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-12">
+                                <label for="name"><strong> Numero de Expediente:</strong></label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
+                                    {!! Form::text('numexp_al', null, ['class'=>'form-control', 'id' => 'numexp_al', 'readonly']) !!}
+                                </div>
+                            </div>
+
                         </div>
+                        
+                        
 
                         <label for="name" class="mtop16"><strong> Detalle de la Cita:</strong></label>
                         <table id="detalles1" class= "table table-striped table-bordered table-condensed table-hover">
@@ -176,8 +186,18 @@
                             {!! Form::date('date', null, ['class'=>'form-control', 'id' => 'date_new_app']) !!}
                         </div>
 
-                        <br>
-                        <label for="idsupplier"><strong> Servicio Solicitante:</strong></label>
+                        <label for="name" class="mtop16"><strong>Horarios de Atención:</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
+                            <select name="schedule" id="schedules" style="width: 88%" >
+                                @foreach($schedules as $s)
+                                    <option value=""></option>
+                                    <option value="{{ $s->id }}">{{ \Carbon\Carbon::parse($s->hour_in)->format('H:i').' '.getHourType(null, $s->type) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <label for="idsupplier" class="mtop16"><strong> Servicio Solicitante:</strong></label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-layer-group"></i></span>                            
                             <select name="pidservice" id="pidservice" style="width: 88%" >
@@ -188,8 +208,7 @@
                             </select>
                         </div>
 
-                        <br>
-                        <label for="idsupplier"><strong> Estudio / Examen A Realizar:</strong></label>
+                        <label for="idsupplier" class="mtop16"><strong> Estudio / Examen A Realizar:</strong></label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-layer-group"></i></span>
                             {!! Form::select('studies', $studies,0,['class'=>'form-select', 'id' => 'studies', 'style' => 'width: 88%']) !!}
@@ -205,17 +224,11 @@
                         <div class="input-group mtop16">
                             {!! Form::button('Agregar', ['class'=>'btn btn-primary', 'id'=>'btn_agregar']) !!}
                         </div>
-                        
-                        
-                        
                     </div>
-
                 </div>
             </div>
-
-            
         </div>
-
+        
         <div class="row mtop16">
             <div class="col-md-12">
                 <div class="panel shadow">
@@ -263,6 +276,7 @@
         $("#btn_guardar").hide();
         var cont = 0;
 
+
         $(document).ready(function(){
             var today = new Date();
             var dd = today.getDate();
@@ -280,6 +294,8 @@
             today = yyyy + '-' + mm + '-' + dd;
             document.getElementById("date_new_app").setAttribute("min", today);
 
+
+
             $('#btn_agregar').click(function(){
                 agregar_tabla();
             });
@@ -287,7 +303,9 @@
             $('#bt_add').click(function(){
                 agregar();
             });
+
             
+
             $('#bt_search').click(function(){
                 $('#modelId').modal("show");
             });

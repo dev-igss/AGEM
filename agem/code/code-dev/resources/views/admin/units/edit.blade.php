@@ -19,7 +19,7 @@
                     </div>
 
                     <div class="inside">
-                        {!! Form::open(['url' => '/admin/unit/'.$unit->id.'/edit', 'files' => true]) !!}
+                        {!! Form::open(['url' => '/admin/unidad/'.$unit->id.'/editar', 'files' => true]) !!}
                             
                             <label for="name"> <strong> Nombre de Unidad: </strong></label>
                             <div class="input-group">

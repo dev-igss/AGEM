@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'IsAdminUnit' => \App\Http\Middleware\IsAdminUnit::class,
         'UserStatus' => \App\Http\Middleware\UserStatus::class,
         'Permissions' => \App\Http\Middleware\Permissions::class,
+        "cors" => \App\Http\Middleware\Cors::class,
     ];
 }

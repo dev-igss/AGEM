@@ -12,7 +12,7 @@
         <div class="panel shadow">
 
             <div class="header">
-                <h2 class="title"><i class="fas fa-clipboard-list"></i> Bitacoras</h2>
+                <h2 class="title"><i class="fas fa-clipboard-list"></i> <strong>Bitacoras</strong></h2>
                 <ul>
                     @if(kvfj(Auth::user()->permissions, 'report_bitacora'))
                         <li>

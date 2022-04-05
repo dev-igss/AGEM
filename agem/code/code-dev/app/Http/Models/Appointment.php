@@ -23,6 +23,10 @@ class Appointment extends Model
         return $this->hasOne(Service::class,'id','service_id');
     }
 
+    public function schedule(){
+        return $this->hasOne(Schedule::class,'id','schedule_id');
+    }
+
     public function studie(){
         return $this->hasOne(Studie::class,'id','study_id');
     }

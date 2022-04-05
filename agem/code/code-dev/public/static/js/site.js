@@ -39,7 +39,7 @@ function delete_object(e){
             html:
             '<label> <strong> Seleccione el material utilizado </strong> </label>'
             +
-            '<select id="swal-input2" class="swal2-input"> <option value="0">Placa 8x10</option> <option value="1">Placa 10x12</option> <option value="2">Placa 11x14</option> <option value="3">Placa 14x17</option> <option value="4">Hojas</option> <option value="5">Fotos</option> <option value="6">Pelicula 8x10</option> <option value="7">Pelicula 10x12</option><option value="8">Singoplaza</option></select>' 
+            '<select id="swal-input2" class="swal2-input"> <option value="0">Placa 8x10</option> <option value="1">Placa 10x12</option> <option value="2">Placa 11x14</option> <option value="3">Placa 14x17</option> <option value="4">Hojas</option> <option value="5">Fotos</option> <option value="6">Pelicula 8x10</option> <option value="7">Pelicula 10x12</option></select>'
             + 
             '<label> <strong> Cantidad de material utilizado </strong> </label>'
             +
@@ -52,8 +52,7 @@ function delete_object(e){
             }
         }).then((result) =>{
             if (result.isConfirmed) {
-                //var url = base + '/agem/public/agem/api/load/name/study/'+idstudyappointment;
-                var url = base + '/agem/api/load/name/study/'+idstudyappointment;
+                var url = base + '/agem/public/agem/api/load/name/study/'+idstudyappointment;
                 http.open('GET', url, true);
                 http.setRequestHeader('X-CSRF-TOKEN', csrfToken);
                 http.send();
@@ -70,7 +69,7 @@ function delete_object(e){
                         cantidad = cant;
                         cont = 0; 
 
-                        if (material != ""){
+                        if (material != "" && cantidad > 0){
                             var fila='<tr class="selected" id="fila'+cont+'"><td><button type="button" class="btn btn-warning" onclick="eliminar('+cont+');">X</button></td><input type="hidden" name="idappointment[]" value="'+idappointment+'"><td><input type="hidden" name="idstudy[]" value="'+idstudy+'">'+name_study+'</td><td><input type="hidden" name="material[]" value="'+material+'">'+material_name+'</td><td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td></tr>';
                             cont++;
                             evaluar();

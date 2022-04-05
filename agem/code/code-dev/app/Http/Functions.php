@@ -44,6 +44,19 @@
         endif;
     }
 
+    function getHourType($mode, $id){
+        $roles = [
+            '0' => 'A.M',
+            '1' => 'P.M'
+        ];
+
+        if(!is_null($mode)):
+            return $roles;
+        else:
+            return $roles[$id];
+        endif;
+    }
+
     function getTypeStudie($mode, $id){
         $roles = [
             '0' => 'RX',
@@ -222,6 +235,16 @@
                     'patient_edit' => 'Puede editar pacientes.',
                     'patient_edit_affiliation' => 'Puede editar la afiliación de los pacientes.',
                     'patient_history_exam' => 'Puede ver el historial de citas de pacientes.'
+                ]
+            ],
+
+            'schedules' => [
+                'icon' => '<i class="fa fa-clock-o"></i> ',
+                'title' => 'Modulo de Horarios',
+                'keys' => [
+                    'schedule_list' => 'Puede ver el listado de horarios.',
+                    'schedule_add' => 'Puede agregar horarios.',
+                    'schedule_edit' => 'Puede editar horarios.'
                 ]
             ],
 

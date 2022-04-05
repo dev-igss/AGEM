@@ -3,10 +3,10 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item">
-        <a href="{{ url('/admin/equipments/all') }}" class="nav-link"><i class="fas fa-columns"></i> Pacientes</a>
+        <a href="{{ url('/admin/pacientes') }}" class="nav-link"><i class="fas fa-columns"></i> Pacientes</a>
     </li>
     <li class="breadcrumb-item">
-        <a href="{{ url('/admin/equipments/add') }}" class="nav-link"><i class="fas fa-plus-circle"></i> Historial de Citas</a>
+        <a href="{{ url('/admin/paciente/historial_codigos_expedientes') }}" class="nav-link"><i class="fas fa-plus-circle"></i> Historial de Citas</a>
     </li>
 @endsection
 

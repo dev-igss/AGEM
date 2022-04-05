@@ -13,12 +13,12 @@
             <div class="col-md-4">
                 @if(kvfj(Auth::user()->permissions, 'user_add'))
                     <div class="panel shadow">
-                        <div class="header">
-                            <h2 class="title"><i class="fas fa-plus-circle"></i> Agregar Usuario</h2>
+                        <div class="header"> 
+                            <h2 class="title"><i class="fas fa-plus-circle"></i> <strong>Agregar Usuario</strong></h2>
                         </div>
 
                         <div class="inside">
-                            {!! Form::open(['url' => '/admin/user/add', 'files' => true]) !!}
+                            {!! Form::open(['url' => '/admin/usuario/agregar', 'files' => true]) !!}
                                 <label for="name"><strong><sup style="color: red;">(*)</sup>  IBM Empleado:</strong> </label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
@@ -47,7 +47,7 @@
             <div class="col-md-8">
                 <div class="panel shadow">
                     <div class="header">
-                        <h2 class="title"><i class="fas fa-hospital-user"></i> Listado de Usuarios </a>
+                        <h2 class="title"><i class="fas fa-hospital-user"></i> <strong>Listado de Usuarios </strong></a>
                     </div>
 
                     <div class="inside">
@@ -66,10 +66,10 @@
                                         <td>
                                             <div class="opts">
                                                 @if(kvfj(Auth::user()->permissions, 'user_edit'))
-                                                    <a href="{{ url('/admin/user/'.$user->id.'/edit') }}" data-toogle="tooltrip" data-placement="top" title="Ver"><i class="fas fa-eye"></i></a>
+                                                    <a href="{{ url('/admin/usuario/'.$user->id.'/editar') }}" data-toogle="tooltrip" data-placement="top" title="Ver"><i class="fas fa-eye"></i></a>
                                                 @endif
                                                 @if(kvfj(Auth::user()->permissions, 'user_permissions'))
-                                                    <a href="{{ url('/admin/user/'.$user->id.'/permissions') }}" data-toogle="tooltrip" data-placement="top" title="Permisos"><i class="fas fa-cogs"></i></a>
+                                                    <a href="{{ url('/admin/usuario/'.$user->id.'/permisos') }}" data-toogle="tooltrip" data-placement="top" title="Permisos"><i class="fas fa-cogs"></i></a>
                                                 @endif
                                             </div>
                                         </td>

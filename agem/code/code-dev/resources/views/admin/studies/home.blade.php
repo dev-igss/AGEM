@@ -3,7 +3,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item">
-        <a href="{{ url('/admin/kardex/all') }}" class="nav-link"><i class="fas fa-heartbeat"></i> Examenes / Estudios</a>
+        <a href="{{ url('/admin/estudios/todos') }}" class="nav-link"><i class="fas fa-heartbeat"></i> Examenes / Estudios</a>
     </li>
 @endsection
 
@@ -14,11 +14,11 @@
                 @if(kvfj(Auth::user()->permissions, 'serviceg_add'))
                     <div class="panel shadow">
                         <div class="header">
-                            <h2 class="title"><i class="fas fa-plus-circle"></i> Agregar Examen / Estudio</h2>                            
+                            <h2 class="title"><i class="fas fa-plus-circle"></i><strong> Agregar Examen / Estudio</strong></h2>                            
                         </div>
 
                         <div class="inside">
-                            {!! Form::open(['url' => '/admin/studie/add', 'files' => true]) !!}
+                            {!! Form::open(['url' => '/admin/estudio/agregar', 'files' => true]) !!}
                                 <label for="name"> <strong><sup style="color: red;">(*)</sup> Nombre: </strong></label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
@@ -47,7 +47,7 @@
             <div class="col-md-8">
                 <div class="panel shadow">
                     <div class="header">
-                        <h2 class="title"><i class="fas fa-heartbeat"></i> Examenes / Estudios </h2>
+                        <h2 class="title"><i class="fas fa-heartbeat"></i><strong> Listado de Examenes / Estudios </strong></h2>
                         <ul>
                             <li>
                                 <div class="btn-group">
@@ -57,12 +57,12 @@
                                     </button>
 
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a href="{{url('/admin/studies/0')}}">RX</a></li>
-                                        <li><a href="{{url('/admin/studies/1')}}"> RX Especiales</a></li>
-                                        <li><a href="{{url('/admin/studies/2')}}"> USG</a></li>
-                                        <li><a href="{{url('/admin/studies/3')}}"> MMO</a></li>
-                                        <li><a href="{{url('/admin/studies/4')}}"> DMO</a></li>
-                                        <li><a href="{{url('/admin/studies/all')}}"> Todos</a></li>
+                                        <li><a href="{{url('/admin/estudios/0')}}">RX</a></li>
+                                        <li><a href="{{url('/admin/estudios/1')}}"> RX Especiales</a></li>
+                                        <li><a href="{{url('/admin/estudios/2')}}"> USG</a></li>
+                                        <li><a href="{{url('/admin/estudios/3')}}"> MMO</a></li>
+                                        <li><a href="{{url('/admin/estudios/4')}}"> DMO</a></li>
+                                        <li><a href="{{url('/admin/estudios/todos')}}"> Todos</a></li>
                                     </ul>
                                 </div>
                             </li>
@@ -86,7 +86,8 @@
                                         <td>
                                             <div class="opts"> 
                                                 @if(kvfj(Auth::user()->permissions, 'studie_edit'))
-                                                    <a href="{{ url('/admin/studie/'.$s->id.'/edit') }}"  title="Editar"><i class="fas fa-edit"></i></a>
+                                                    <!-- pendiente hacer esta vista -->
+                                                    <a href="{{ url('/admin/estudio/'.$s->id.'/editar') }}"  title="Editar"><i class="fas fa-edit"></i></a>
                                                 @endif  
                                             </div>
                                         </td>

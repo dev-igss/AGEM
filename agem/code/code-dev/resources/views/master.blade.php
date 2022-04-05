@@ -40,12 +40,12 @@
 					</li>
 					@if(!Auth::guest())
 						<li class="nav-item">
-							<a href="{{ url('/inicio/todas') }}" class="nav-link"><i class="fas fa-home"></i> <span> Inicio</span></a>
+							<a href="{{ url('/citas_del_dia') }}" class="nav-link"><i class="fas fa-home"></i> <span> Inicio</span></a>
 						</li>
 					@endif
 					@if(Auth::guest())
 					<li class="nav-item link-acc">
-						<a href="{{ url('/login') }}" class="nav-link btn"><i class="fas fa-fingerprint"></i> Ingresar</a>
+						<a href="{{ url('/inicio_sesion') }}" class="nav-link btn"><i class="fas fa-fingerprint"></i> Ingresar</a>
 					</li>
 					@endif
 				</ul>

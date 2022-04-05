@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', function(){
     var btn_manual_code_mmo = document.getElementById('btn_manual_code_mmo');
     var btn_manual_code_dmo = document.getElementById('btn_manual_code_dmo');
     var btn_update_affiliation = document.getElementById('btn_update_affiliation');
+    var btn_disponibilidad = document.getElementById('btn_disponibilidad');
+
 
     if(btn_add_patient_search){
         btn_add_patient_search.addEventListener('click', function(e){
@@ -86,6 +88,8 @@ document.addEventListener('DOMContentLoaded', function(){
             document.getElementById("div_update_affiliation").style.display = "block";
         });
     }
+
+    getDisponibilidadHorario();
    
     if(route == "equipment_add"){
         setServiceToEquipment();
@@ -192,6 +196,11 @@ document.addEventListener('DOMContentLoaded', function(){
         allowClear: true
     });
 
+    $("#schedules").select2({
+        placeholder: "Seleccione una Opción",
+        allowClear: true
+    });
+
 });
 
 
@@ -201,8 +210,8 @@ function delete_object(e){
     var object = this.getAttribute('data-object');
     var action = this.getAttribute('data-action');
     var path = this.getAttribute('data-path');
-    //var url = base + '/agem/public/' + path + '/' + object + '/' + action;
-    var url = base + '/' + path + '/' + object + '/' + action;
+    var url = base + '/agem/public/' + path + '/' + object + '/' + action;
+    //var url = base + '/' + path + '/' + object + '/' + action;
     var title, text, icon, date, status;
     var today = new Date();
     var dd = today.getDate();
@@ -219,25 +228,31 @@ function delete_object(e){
         
     today = yyyy + '-' + mm + '-' + dd;
     console.log(today);
-    if(action == "reschedule"){
-        title = '¿Esta seguro de '+'"Reagendar"'+' esta cita?';
+    if(action == "reprogramar"){
+        title = '¿Esta seguro de '+'"Reprogramar"'+' esta cita?';
         text = "Recuerde que esta acción no se podra realizar nuevamente.";
         icon = "warning";
     }
 
-    if(action == "patients_in"){
+    if(action == "reprogramacion_forzada"){
+        title = '¿Esta seguro de '+'"Reprogramar"'+' esta cita?';
+        text = "Recuerde que esta acción no se podra realizar nuevamente.";
+        icon = "warning";
+    }
+
+    if(action == "paciente_presente"){
         title = '¿Esta seguro de marcar como'+'"Paciente Presente"'+' en esta cita?';
         text = "Recuerde que esta acción no se podra realizar nuevamente.";
         icon = "success";
     }
 
-    if(action == "patients_out"){
+    if(action == "paciente_ausente"){
         title = '¿Esta seguro de marcar como'+'"Paciente Ausente"'+' en esta cita?';
         text = "Recuerde que esta acción no se podra realizar nuevamente.";
         icon = "error";
     }
 
-    if(action == "reschedule"){ 
+    if(action == "reprogramar"){ 
         Swal.fire({
             title: title,
             text: text,
@@ -259,7 +274,29 @@ function delete_object(e){
                 window.location.href = url+'/'+date;
             }            
         });
-    }else if(action == "patients_in"){
+    }else if(action == "reprogramacion_forzada"){
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            confirmButtonText: 'Aceptar',
+            cancelButtonText: 'Cancelar',
+            showCancelButton: true,
+            html: '<input type="date" id="swal-input" class="swal2-input" min="'+today+'"><label>Motivo:</label><input type="text" id="swal-input" class="swal2-input" min="'+today+'">',
+            focusConfirm: false,
+            allowOutsideClick: false,
+            preConfirm: () => {
+                
+                return document.getElementById('swal-input').value;
+            }
+        }).then((result) =>{
+            if (result.isConfirmed) {
+                date = result.value;
+                
+                window.location.href = url+'/'+date;
+            }            
+        });
+    }else if(action == "paciente_presente"){
         Swal.fire({
             title: title,
             text: text,
@@ -273,7 +310,7 @@ function delete_object(e){
                 window.location.href = url+'/'+status;
             }            
         });
-    }else if(action == "patients_out"){
+    }else if(action == "paciente_ausente"){
         Swal.fire({
             title: title,
             text: text,
@@ -296,8 +333,8 @@ function delete_object(e){
 function setInfoAddPatient(){
     var exam = document.getElementById('exam_b').value;
     var affiliation_b = document.getElementById('affiliation_b').value;
-    //var url = base + '/agem/public/admin/agem/api/load/add/patient/'+affiliation_b+'/'+exam;
-    var url = base + '/admin/agem/api/load/add/patient/'+affiliation_b+'/'+exam;
+    var url = base + '/agem/public/admin/agem/api/load/add/patient/'+affiliation_b+'/'+exam;
+    //var url = base + '/admin/agem/api/load/add/patient/'+affiliation_b+'/'+exam;
     var patient_id = document.getElementById('ppatient_id');
     var name = document.getElementById('ppatient_name');
     var lastname = document.getElementById('ppatient_lastname');
@@ -322,7 +359,7 @@ function setInfoAddPatient(){
             if('code_last' in data){
                 code_last.value = data.code_last[0].code;
             }
-            console.log(data);
+            //console.log(data);
             if('appointment_last' in data){
                 date_al.value = data.appointment_last[0].date;
                 numexp_al.value = data.appointment_last[0].num_study;
@@ -337,8 +374,8 @@ function setInfoAddPatient(){
             var studies_actual = document.getElementById('studies_actual').value;
             select = document.getElementById('studies');
             select.innerHTML = "";
-            //var url = base + '/agem/public/admin/agem/api/load/studies/'+exam;
-            var url = base + '/admin/agem/api/load/studies/'+exam;
+            var url = base + '/agem/public/admin/agem/api/load/studies/'+exam;
+            //var url = base + 'admin/agem/api/load/studies/'+exam;
             http.open('GET', url, true);
             http.setRequestHeader('X-CSRF-TOKEN', csrfToken);
             http.send();
@@ -365,8 +402,8 @@ function setInfoAddPatient(){
 
 function setGenerateCodeRx(){
     var nomenclatura = 'RX';
-    //var url = base + '/agem/public/admin/agem/api/load/generate/code/'+nomenclatura;
-    var url = base + '/admin/agem/api/load/generate/code/'+nomenclatura;
+    var url = base + '/agem/public/admin/agem/api/load/generate/code/'+nomenclatura;
+    //var url = base + '/admin/agem/api/load/generate/code/'+nomenclatura;
     var num_rx = document.getElementById('pnum_rx');
     var nomenclature = document.getElementById('pnum_rx_nom');
     var correlative = document.getElementById('pnum_rx_cor');
@@ -389,8 +426,8 @@ function setGenerateCodeRx(){
 
 function setGenerateCodeUsg(){
     var nomenclatura = 'USG';
-    //var url = base + '/agem/public/admin/agem/api/load/generate/code/'+nomenclatura;
-    var url = base + '/admin/agem/api/load/generate/code/'+nomenclatura;
+    var url = base + '/agem/public/admin/agem/api/load/generate/code/'+nomenclatura;
+    //var url = base + '/admin/agem/api/load/generate/code/'+nomenclatura;
     var num_usg = document.getElementById('pnum_usg');
     var nomenclature = document.getElementById('pnum_usg_nom');
     var correlative = document.getElementById('pnum_usg_cor');
@@ -413,8 +450,8 @@ function setGenerateCodeUsg(){
 
 function setGenerateCodeMmo(){
     var nomenclatura = 'MMO';
-    //var url = base + '/agem/public/admin/agem/api/load/generate/code/'+nomenclatura;
-    var url = base + '/admin/agem/api/load/generate/code/'+nomenclatura;
+    var url = base + '/agem/public/admin/agem/api/load/generate/code/'+nomenclatura;
+    //var url = base + '/admin/agem/api/load/generate/code/'+nomenclatura;
     var num_mmo = document.getElementById('pnum_mmo');
     var nomenclature = document.getElementById('pnum_mmo_nom');
     var correlative = document.getElementById('pnum_mmo_cor');
@@ -437,8 +474,8 @@ function setGenerateCodeMmo(){
 
 function setGenerateCodeDmo(){
     var nomenclatura = 'DMO';
-    //var url = base + '/agem/public/admin/agem/api/load/generate/code/'+nomenclatura;
-    var url = base + '/admin/agem/api/load/generate/code/'+nomenclatura;
+    var url = base + '/agem/public/admin/agem/api/load/generate/code/'+nomenclatura;
+    //var url = base + '/admin/agem/api/load/generate/code/'+nomenclatura;
     var num_dmo = document.getElementById('pnum_dmo');
     var nomenclature = document.getElementById('pnum_dmo_nom');
     var correlative = document.getElementById('pnum_dmo_cor');
@@ -458,4 +495,48 @@ function setGenerateCodeDmo(){
         }
     }
 }
+
+function getDisponibilidadHorario(){
+    
+    var inputdate = document.getElementById('date_new_app');
+    var options=$('#schedules option').clone();
+
+    $(inputdate).change(function(){
+
+        var fecha = document.getElementById("date_new_app").value;
+        //console.log(fecha);
+        var dia = fecha[8]+fecha[9];
+        var mes = fecha[6];
+        var year = fecha[0]+fecha[1]+fecha[2]+fecha[3];
+        var exam = document.getElementById('exam_b').value;
+        
+        var url = base + '/agem/public/admin/agem/api/load/schedules/'+fecha+'/'+exam;
+        //var url = base + '/admin/agem/api/load/schedules/'+fecha+'/'+exam;
+        http.open('GET', url, true);
+        http.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+        http.send();
+        http.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){
+                var data = this.responseText;
+                data = JSON.parse(data);
+                //console.log(data);   
+                if(data.length > 0){
+                    data.forEach( function(schedule, index){
+                        if(schedule.total >= 2){
+                            for(i=1; i <= 18; i++){
+                                //console.log(i);
+                                if(schedule.schedule_id == i){
+                                    $('#schedules option[value="'+schedule.schedule_id+'"]').remove();    
+                                }
+                            }                                                          
+                        }    
+                    });  
+                }else{
+                    $('#schedules').html(options);
+                }
+            }
+        }
+    });
+}
+
 

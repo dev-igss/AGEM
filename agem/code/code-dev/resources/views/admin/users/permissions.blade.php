@@ -13,7 +13,7 @@
 @section('content')
     <div class="container-fluid">
         <div class="page_user">
-            <form action="{{ url('/admin/user/'.$u->id.'/permissions') }}" method="POST">
+            <form action="{{ url('/admin/usuario/'.$u->id.'/permisos') }}" method="POST">
                 @csrf
 
                 <div class="row">
@@ -47,7 +47,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> 
 
             </form>
         </div>

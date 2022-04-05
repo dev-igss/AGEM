@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Models\Appointment, App\Http\Models\DetailAppointment, App\Http\Models\MaterialAppointment, App\Http\Models\Patient, App\Http\Models\CodePatient, App\Http\Models\Service, App\Http\Models\Studie, App\Http\Models\Bitacora;
+use App\Http\Models\Appointment, App\Http\Models\ControlAppointment, App\Http\Models\DetailAppointment, App\Http\Models\MaterialAppointment, App\Http\Models\Patient, App\Http\Models\CodePatient, App\Http\Models\Service, App\Http\Models\Studie, App\Http\Models\Schedule, App\Http\Models\Bitacora;
 use Validator, Str, Config, Auth, Session, DB, Response, Carbon\Carbon;
 
 class AppointmentController extends Controller
@@ -34,11 +34,13 @@ class AppointmentController extends Controller
             ->get();
         $studies = Studie::pluck('name','id');
         $detalles = DetailAppointment::all();
+        $schedules = Schedule::all();
 
         $data = [
             'services' => $services,
             'studies' => $studies,
-            'detalles' => $detalles
+            'detalles' => $detalles,
+            'schedules' => $schedules
         ];
 
         return view('admin.appointments.add', $data);
@@ -56,6 +58,7 @@ class AppointmentController extends Controller
     	if($validator->fails()):
     		return back()->withErrors($validator)->with('messages', 'Se ha producido un error.')->with('typealert', 'danger');
         else: 
+
             $idpatient = $request->input('patient_id');
             $type_exam = $request->input('type_exam');
             $affiliation_p = Patient::select('affiliation')
@@ -143,19 +146,87 @@ class AppointmentController extends Controller
 
             DB::beginTransaction();
 
+            $servicio = Service::with(['parent'])->where('id', $request->get('idservice')[0])->get();
+
+            foreach($servicio as $ser):
+                $solicitante = $ser->parent->name;
+            endforeach;
+
             $appointment = new Appointment;
             $appointment->patient_id = $idpatient;
             $appointment->date = $request->input('date');
+            if($request->input('schedule') != ""):
+                $appointment->schedule_id = $request->input('schedule');
+            else:
+                $appointment->schedule_id = $request->input('schedule1');
+            endif;
+
+            $ca = ControlAppointment::where('date', $appointment->date)->count();
+
+            if($ca == 0):
+                $control = new ControlAppointment;
+                $control->date = $request->input('date');
+                if($area == 0 ):
+                    $control->amount_rx = '1';
+                elseif($area == 1):
+                    $control->amount_rx_special = '1';
+                elseif($area == 2):
+                    $control->amount_usg = '1';
+                elseif($area == 3):
+                    $control->amount_mmo = '1';
+                elseif($area == 4):
+                    $control->amount_dmo = '1';
+                endif;
+                $control->save();
+            else:
+                $ca1 = ControlAppointment::where('date' , $request->input('date'))->get();
+                foreach($ca1 as $c):
+                    if($area == 0 ):
+                        if($c->amount_rx == 100):
+                            return back()->with('messages', '¡No se pueden agendar mas citas, espacios llenos!.')
+                                    ->with('typealert', 'warning');
+                        else:
+                            $c->amount_rx = $c->amount_rx + 1;
+                        endif;                        
+                    elseif($area == 1):
+                        $c->amount_rx_special = $c->amount_rx_special + 1;
+                    elseif($area == 2):
+                        if($c->amount_usg == 100):
+                            return back()->with('messages', '¡No se pueden agendar mas citas, espacios llenos!.')
+                                    ->with('typealert', 'warning');
+                        else:
+                            $c->amount_usg = $c->amount_usg + 1;
+                        endif;                        
+                    elseif($area == 3):
+                        if($c->amount_mmo == 100):
+                            return back()->with('messages', '¡No se pueden agendar mas citas, espacios llenos!.')
+                                    ->with('typealert', 'warning');
+                        else:
+                            $c->amount_mmo = $c->amount_mmo + 1;
+                        endif;                         
+                    elseif($area == 4):
+                        if($c->amount_dmo == 100):
+                            return back()->with('messages', '¡No se pueden agendar mas citas, espacios llenos!.')
+                                    ->with('typealert', 'warning');
+                        else:
+                            $c->amount_dmo = $c->amount_dmo + 1;
+                        endif;                        
+                    endif;
+                    $c->save();
+                endforeach;
+                
+            endif;          
 
             if($code_assig != NULL):
                 $appointment->num_study = $code_assig;
             endif;
             $appointment->type = $appointments_type;
             $appointment->area = $area;
+            $appointment->service = $solicitante;
             $appointment->status = '0';    
             $appointment->save();      
 
-            $idservice = $request->get('idservice');
+            $idservice = $request->get('idservice');          
             $idstudy = $request->get('idstudy');
             $comment = $request->get('comment');
 
@@ -174,6 +245,10 @@ class AppointmentController extends Controller
             DB::commit();
 
             if($appointment->save()):  
+                
+
+                
+
                 foreach($affiliation_p as $ap):
                     $afp = $ap->affiliation;
                 endforeach;
@@ -183,10 +258,20 @@ class AppointmentController extends Controller
                 $b->user_id = Auth::id();
                 $b->save();
 
-                return redirect('/admin/appointments')->with('messages', '¡Cita agendada y guardada con exito!.')
+                return redirect('/admin/citas')->with('messages', '¡Cita agendada y guardada con exito!.')
                     ->with('typealert', 'success');
     		endif;
         endif;
+    }
+
+    public function getCalendar(){
+        
+
+        $data = [
+            
+        ];
+
+        return view('admin.appointments.calendar', $data);
     }
 
     public function getAppointmentMaterials($id){
@@ -212,7 +297,7 @@ class AppointmentController extends Controller
             $b->user_id = Auth::id();
             $b->save();
 
-            return redirect('/admin/appointments')->with('messages', '¡Cita reprogramada y guardada con exito!.')
+            return redirect('/admin/citas')->with('messages', '¡Cita reprogramada y guardada con exito!.')
                 ->with('typealert', 'success');
         endif;
     }
@@ -245,22 +330,31 @@ class AppointmentController extends Controller
             break;
         endswitch;
         
-        $code_study = CodePatient::select('code')
-                        ->where('patient_id', $appointment->patient_id)
+        $code_study = CodePatient::where('patient_id', $appointment->patient_id)
                         ->where('nomenclature', $nomen)
                         ->where('status', '0')
                         ->limit(1)
-                        ->get();
-
-        foreach($code_study as $cs):
-            $num_exp = $cs->code;
+                        ->get();  
+                        
+        $num_exp = 0;
+        foreach($code_study as $cs):            
+            $num_exp = $cs->code;                        
         endforeach;
-        
-        if($status == "1"):
-            $appointment->num_study = $num_exp;
-        endif;
-        $appointment->status = $status;
 
+        if($status == "1"):
+            if($num_exp === 0):
+                return redirect('/admin/citas')->with('messages', '¡Asigne un numero de expediente primero!.')
+                    ->with('typealert', 'warning'); 
+            else:
+                
+                $appointment->num_study = $num_exp;                    
+
+                $appointment->status = $status;
+            endif; 
+        else:
+            $appointment->status = $status;
+        endif; 
+            
         if($appointment->save()):               
 
             $b = new Bitacora;
@@ -272,8 +366,8 @@ class AppointmentController extends Controller
             $b->user_id = Auth::id();
             $b->save();
 
-            return redirect('/admin/appointments')->with('messages', '¡Estado de cita actualizado con exito!.')
-                ->with('typealert', 'success');
+            return redirect('/admin/citas')->with('messages', '¡Estado de cita actualizado con exito!.')
+                ->with('typealert', 'success');            
         endif;
     }
 }

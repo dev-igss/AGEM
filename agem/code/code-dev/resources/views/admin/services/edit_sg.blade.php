@@ -18,7 +18,7 @@
                     </div>
 
                     <div class="inside">
-                        {!! Form::open(['url' => '/admin/services_g/'.$servicesg->id.'/edit', 'files' => true]) !!}
+                        {!! Form::open(['url' => '/admin/servicios_general/'.$servicesg->id.'/editar', 'files' => true]) !!}
                             <label for="name"> <strong><sup style="color: red;">(*)</sup> Nombre: </strong></label>
                             <div class="input-group">
                                 <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>

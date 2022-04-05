@@ -38,9 +38,9 @@
 
                                 @if(kvfj(Auth::user()->permissions, 'user_banned'))
                                     @if($u->status == '0')
-                                        <a href="{{ url('/admin/user/'.$u->id.'/banned') }}" class="btn btn-success">Activar Usuario</a>
+                                        <a href="{{ url('/admin/usuario/'.$u->id.'/suspender') }}" class="btn btn-success">Activar Usuario</a>
                                     @else
-                                        <a href="{{ url('/admin/user/'.$u->id.'/banned') }}" class="btn btn-warning">Suspender Usuario</a>
+                                        <a href="{{ url('/admin/usuario/'.$u->id.'/suspender') }}" class="btn btn-warning">Suspender Usuario</a>
                                     @endif
                                 @endif
                             </div>
@@ -58,7 +58,7 @@
                         <div class="inside">
 
                             @if(kvfj(Auth::user()->permissions, 'user_edit'))
-                                {!! Form::open(['url'=> '/admin/user/'.$u->id.'/edit']) !!}
+                                {!! Form::open(['url'=> '/admin/usuario/'.$u->id.'/editar']) !!}
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label for="name" ><strong>Nombre:</strong></label>
@@ -99,7 +99,7 @@
                                 <h2 class="title"><i class="fas fa-fingerprint"></i><strong> Restablecer Contraseña</strong></h2>
                             </div>
                             <div class="inside">
-                                {!! Form::open(['url' => '/admin/user/'.$u->id.'/reset_password']) !!}
+                                {!! Form::open(['url' => '/admin/usuario/'.$u->id.'/reiniciar_contrasena']) !!}
 
                                     <div class="row">
                                         <div class="col-md-12">
