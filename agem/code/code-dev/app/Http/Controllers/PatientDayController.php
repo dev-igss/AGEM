@@ -81,6 +81,7 @@ class PatientDayController extends Controller
         $cita = Appointment::findOrFail($request->get('appointmentid'));
         $cita->status = '3';
         $cita->ibm_tecnico_1 = $id_tec1;
+        $area_temp = $cita->area;
         if($request->get('ibm2') != ""):
             $cita->ibm_tecnico_2 = $id_tec2;
         endif;
@@ -113,8 +114,13 @@ class PatientDayController extends Controller
             $b->user_id = $id_tec1;
             $b->save();
 
-            return redirect('/patients_days')->with('messages', '¡Registro de Materiales Exitos!.')
-                ->with('typealert', 'success');
+            if($area_temp == '0'):
+                return redirect('/citas_del_dia_rx')->with('messages', '¡Registro de Materiales Exitos!.')
+                    ->with('typealert', 'success');
+            else:
+                return redirect('/citas_del_dia_umd')->with('messages', '¡Registro de Materiales Exitos!.')
+                    ->with('typealert', 'success');
+            endif;
 
         endif;
 

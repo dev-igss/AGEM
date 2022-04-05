@@ -5,7 +5,7 @@
 <div class="container-fluid">
     
 
-    {!! Form::open(['url'=>'/patients_days/materials']) !!}
+    {!! Form::open(['url'=>'/citas_del_dia/materiales']) !!}
         {!! Form::hidden('appointmentid', $idappointment , ['class'=>'form-control', 'id'=> 'appointmentid' ]) !!}
         <div class="row mtop16">
 
