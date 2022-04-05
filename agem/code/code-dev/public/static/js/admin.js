@@ -375,7 +375,7 @@ function setInfoAddPatient(){
             select = document.getElementById('studies');
             select.innerHTML = "";
             //var url = base + '/agem/public/admin/agem/api/load/studies/'+exam;
-            var url = base + 'admin/agem/api/load/studies/'+exam;
+            var url = base + '/admin/agem/api/load/studies/'+exam;
             http.open('GET', url, true);
             http.setRequestHeader('X-CSRF-TOKEN', csrfToken);
             http.send();
