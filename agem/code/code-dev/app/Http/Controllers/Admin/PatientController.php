@@ -19,8 +19,8 @@ class PatientController extends Controller
 
     public function getHome(){
 
-        $patients = Patient::all();            
-
+        $patients = Patient::with(['parent'])->get();            
+        //return $patients;
         $data = [
             'patients' => $patients
         ];
@@ -57,8 +57,23 @@ class PatientController extends Controller
     	if($validator->fails()):
     		return back()->withErrors($validator)->with('messages', 'Se ha producido un error.')->with('typealert', 'danger');
         else: 
+            $type_patient = $request->input('type_patient');
             $p = new Patient;
             $p->affiliation = e($request->input('affiliation'));
+            if($type_patient == '1' || $type_patient == '2'):
+                $patient_parent = Patient::where('affiliation', $request->input('af_prin'))->get();
+
+                if(count($patient_parent) > 0):
+                    foreach($patient_parent as $pp):
+                        $idpatient_parent = $pp->id;
+                    endforeach;
+                    $p->affiliation_idparent = $idpatient_parent;
+                else:
+                    $p->affiliation_principal = $request->input('af_prin');
+                endif;
+            endif;
+
+
             $p->name = e($request->input('name'));
             $p->lastname = e($request->input('lastname'));
             $p->unit_id = e($request->input('unit_id'));
@@ -207,6 +222,7 @@ class PatientController extends Controller
     }
 
     public function postPatientEdit(Request $request, $id){
+
         $rules = [
     		'name' => 'required',
             'lastname' => 'required'
@@ -223,9 +239,49 @@ class PatientController extends Controller
         else: 
             $p = Patient::findOrFail($id);
             $affiliation_ant = $p->affiliation;
+            $type_patient = $request->input('type_patient');
             if($request->input('update_affiliation') != ""):
-                $p->affiliation = $request->input('update_affiliation');
+                if($affiliation_ant != $request->input('update_affiliation')):
+                    $p->affiliation = $request->input('update_affiliation');
+                else:
+                    $p->affiliation = $affiliation_ant;
+                endif;
+
+                if($request->input('af_prin') != ""):
+                    if($type_patient == '1' || $type_patient == '2'):
+                        $patient_parent = Patient::where('affiliation', $request->input('af_prin'))->get();
+        
+                        if(count($patient_parent) > 0):
+                            foreach($patient_parent as $pp):
+                                $idpatient_parent = $pp->id;
+                            endforeach;
+                            $p->affiliation_idparent = $idpatient_parent;
+                            $p->affiliation_principal = NULL;
+                        else:
+                            $p->affiliation_principal = $request->input('af_prin');
+                            $p->affiliation_idparent = NULL;
+                        endif;
+                    endif;
+                endif;
+            else: 
+                if($request->input('af_prin') != ""):
+                    if($type_patient == '1' || $type_patient == '2'):
+                        $patient_parent = Patient::where('affiliation', $request->input('af_prin'))->get();
+        
+                        if(count($patient_parent) > 0):
+                            foreach($patient_parent as $pp):
+                                $idpatient_parent = $pp->id;
+                            endforeach;
+                            $p->affiliation_idparent = $idpatient_parent;
+                            $p->affiliation_principal = NULL;
+                        else:
+                            $p->affiliation_principal = $request->input('af_prin');
+                            $p->affiliation_idparent = NULL;
+                        endif;
+                    endif;
+                endif;
             endif;
+
             $p->name = e($request->input('name'));
             $p->lastname = e($request->input('lastname'));
             $p->gender = $request->input('gender');
@@ -380,6 +436,35 @@ class PatientController extends Controller
                     ->with('typealert', 'success');
     		endif;
         endif;
+    }
+
+    public function getPatientUpdateParent($id, $af_principal){
+        $p = Patient::findOrFail($id);
+
+        $patient_parent = Patient::where('affiliation', $af_principal)->get();
+
+    
+        if(count($patient_parent) > 0):
+            foreach($patient_parent as $pp):
+                $idpatient_parent = $pp->id;
+            endforeach;
+            $p->affiliation_idparent = $idpatient_parent;
+            $p->affiliation_principal = NULL;
+        else:
+            $p->affiliation_principal = $af_principal;
+            $p->affiliation_idparent = NULL;
+        endif;
+
+        if($p->save()):
+            $b = new Bitacora;
+            $b->action = "Actualización de datos de la afiliación principal, del afiliado no.: ".$p->affiliation;                
+            $b->user_id = Auth::id();
+            $b->save();
+
+            return back()->with('messages', '¡Información de afiliación principal actualizada y guardada con exito!.')
+                ->with('typealert', 'success');
+        endif;
+
     }
 
     public function getPatientHistoryExam($id){

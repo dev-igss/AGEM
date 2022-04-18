@@ -190,11 +190,50 @@ class ApiController extends Controller
     }
 
     public function getAppointmentsView(){
+        
         $appointments = DB::table('appointments')
-                        ->join('patients', 'appointments.patient_id', '=', 'patients.id')
-                        ->join('schedule', 'appointments.schedule_id', '=', 'schedule.id')
-                        ->select(DB::raw('CONCAT(patients.lastname,  \', \' , patients.name) AS title'), DB::raw('CONCAT(appointments.date,  \' \' , schedule.hour_in) AS start'), DB::raw('CONCAT(appointments.date,  \' \' , schedule.hour_out) AS end'), DB::raw('appointments.area AS area'))
-                        ->get();
+                ->join('patients', 'appointments.patient_id', '=', 'patients.id')
+                ->join('schedule', 'appointments.schedule_id', '=', 'schedule.id')
+                ->select(DB::raw('CONCAT(patients.lastname,  \', \' , patients.name) AS title'), DB::raw('CONCAT(appointments.date,  \' \' , schedule.hour_in) AS start'), DB::raw('CONCAT(appointments.date,  \' \' , schedule.hour_out) AS end'), DB::raw('appointments.area AS area'), DB::raw('schedule.type AS type'))
+                ->get();
+           
+        
+        return $appointments;
+        $data = [
+           'appointments' => $appointments
+        ];
+
+        return response()->json($data);
+    }
+
+    public function getAppointmentsViewRx(){
+        
+        $appointments = DB::table('appointments')
+                ->join('patients', 'appointments.patient_id', '=', 'patients.id')
+                ->join('schedule', 'appointments.schedule_id', '=', 'schedule.id')
+                ->select(DB::raw('CONCAT(patients.lastname,  \', \' , patients.name) AS title'), DB::raw('CONCAT(appointments.date,  \' \' , schedule.hour_in) AS start'), DB::raw('CONCAT(appointments.date,  \' \' , schedule.hour_out) AS end'), DB::raw('appointments.area AS area'))
+                ->where('appointments.area', 0)
+                ->get();
+           
+        
+        return $appointments;
+        $data = [
+           'appointments' => $appointments
+        ];
+
+        return response()->json($data);
+    }
+
+    public function getAppointmentsViewUmd(){
+        
+        $appointments = DB::table('appointments')
+                ->join('patients', 'appointments.patient_id', '=', 'patients.id')
+                ->join('schedule', 'appointments.schedule_id', '=', 'schedule.id')
+                ->select(DB::raw('CONCAT(patients.lastname,  \', \' , patients.name) AS title'), DB::raw('CONCAT(appointments.date,  \' \' , schedule.hour_in) AS start'), DB::raw('CONCAT(appointments.date,  \' \' , schedule.hour_out) AS end'), DB::raw('appointments.area AS area'), DB::raw('schedule.type AS type'))
+                ->whereIn('appointments.area', ['2', '3', '4'])  
+                ->get();
+           
+        
         return $appointments;
         $data = [
            'appointments' => $appointments

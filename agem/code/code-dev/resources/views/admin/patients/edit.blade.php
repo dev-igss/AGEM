@@ -21,10 +21,11 @@
                     </div>
 
                     <div class="inside">   
-                        <label for="name" class="mtop16"><strong><sup style="color: red;">(*)</sup> Numero de Afiliacion: </strong></label>
+                        <label for="name" class="mtop16"><strong><sup style="color: red;">(*)</sup> Número de Afiliación: </strong></label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
-                            {!! Form::text('affiliation', $patient->affiliation, ['class'=>'form-control', 'readonly']) !!}
+                            {!! Form::select('type_patient_edit', getTypePatient('list', null),$patient->type,['class'=>'form-select col-md-2', 'disabled' ]) !!}
+                            {!! Form::text('affiliation', $patient->affiliation, ['class'=>'form-control', 'readonly']) !!}                             
                             @if(kvfj(Auth::user()->permissions, 'patient_edit_affiliation'))
                                 <a href="#" class="btn btn-sm btn-primary " id="btn_update_affiliation" ><i class="fas fa-qrcode"></i> Actualizar</a>      
                             @endif                      
@@ -32,7 +33,20 @@
 
                         <div id="div_update_affiliation" style="display: none; margin-top: 5px;">
                             <label for="ibm" class="mtop16"><strong><sup style="color: red;">(*)</sup> Afiliación Nueva:</strong></label>
-                            {!! Form::text('update_affiliation', null, ['class'=>'form-control']) !!}                                                           
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
+                                {!! Form::select('type_patient', getTypePatient('list', null),$patient->type,['class'=>'form-select col-md-2', 'id'=> 'patient_type' ]) !!}
+                                {!! Form::text('update_affiliation', null, ['class'=>'form-control']) !!}                                                           
+                                
+                            </div>
+
+                            <div id="af_prin">
+                            <label for="name" class="mtop16"><strong><sup style="color: red;">(*)</sup> Afiliación Principal: </strong></label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
+                                {!! Form::text('af_prin', null, ['class'=>'form-control']) !!}
+                            </div>
+                        </div>  
                         </div> 
 
                         <label for="name" class="mtop16"><strong><sup style="color: red;">(*)</sup> Nombre:</strong></label>
@@ -47,11 +61,38 @@
                             {!! Form::text('lastname', $patient->lastname, ['class'=>'form-control']) !!}
                         </div>
 
-                        <label for="name" class="mtop16"><strong><sup style="color: red;">(*)</sup> Unidad del Paciente:</strong></label>
-                        <div class="input-group">
-                            <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
-                            {!! Form::text('unit', $patient->unit->name, ['class'=>'form-control', 'readonly']) !!}
-                        </div>
+                        @if($patient->type == '1' || $patient->type == '2')
+                            <hr>
+                            <h4 style="margin-left: 75px;"> <strong>Datos de Afiliación Principal </strong> </h4>
+
+                            @if($patient->affiliation_idparent != NULL)
+                                <label for="name" class="mtop16"><strong><sup style="color: red;"></sup> Número de Afiliación: </strong></label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
+                                    {!! Form::select('type_patient_edit', getTypePatient('list', null),$patient->parent->type,['class'=>'form-select col-md-2', 'disabled' ]) !!}
+                                    {!! Form::text('affiliation', $patient->parent->affiliation, ['class'=>'form-control', 'readonly']) !!}                                                  
+                                </div>
+
+                                <label for="name" class="mtop16"><strong><sup style="color: red;"></sup> Nombre:</strong></label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
+                                    {!! Form::text('name', $patient->parent->name, ['class'=>'form-control', 'disabled']) !!}
+                                </div>
+
+                                <label for="name" class="mtop16"><strong><sup style="color: red;"></sup> Apellidos:</strong></label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
+                                    {!! Form::text('lastname', $patient->parent->lastname, ['class'=>'form-control', 'disabled']) !!}
+                                </div>
+                            @else
+                                <label for="name" class="mtop16"><strong><sup style="color: red;"></sup> Número de Afiliación: </strong></label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
+                                    {!! Form::select('type_patient_edit', getTypePatient('list', null),0,['class'=>'form-select col-md-2', 'disabled' ]) !!}
+                                    {!! Form::text('affiliation', $patient->affiliation_principal, ['class'=>'form-control', 'readonly']) !!}                                                
+                                </div>
+                            @endif
+                        @endif
                     </div>
 
                 </div>
@@ -64,7 +105,7 @@
                     </div>
 
                     <div class="inside"> 
-                    <label for="name" class="mtop16"><strong>Genero:</strong></label>
+                        <label for="name" class="mtop16"><strong>Genero:</strong></label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-layer-group"></i></span>
                             {!! Form::select('gender', getGenderPatient('list', null),$patient->gender,['class'=>'form-select']) !!}
@@ -237,4 +278,23 @@
         </div>
         {!! Form::close() !!}
     </div>
+
+
+    <script>
+        $(document).ready(function(){
+            
+            var patient_type = document.getElementById('patient_type');
+            var af_prin = document.getElementById('af_prin');
+            
+            af_prin.hidden = true;
+
+            $('#patient_type').click(function(){
+                if(patient_type.value == 1 || patient_type.value == 2){
+                    af_prin.hidden = false;
+                }else{
+                    af_prin.hidden = true;
+                }
+            });
+        });
+    </script>
 @endsection

@@ -48,9 +48,29 @@
                                         @if(kvfj(Auth::user()->permissions, 'patient_edit'))
                                             <a href="{{ url('/admin/paciente/'.$p->id.'/historial_codigos_expedientes') }}" data-toogle="tooltrip" data-placement="top" title="Historial de Codigos"><i class="fas fa-list"></i></a>
                                         @endif
+                                        @if($p->affiliation_principal != NULL)
+                                            <a href="{{ url('/admin/paciente/'.$p->id.'/actualizar/afiliacion/principal/'.$p->affiliation_principal) }}" data-toogle="tooltrip" data-placement="top" title="Actualizar Afiliación Principal"><i class="fa fa-refresh"></i></a>
+                                        @endif
                                     </div>
                                 </td>
-                                <td>{{ $p->affiliation}}</td>
+                                <td>
+                                    
+                                    @if($p->type == '1' || $p->type == '2')                                        
+                                        <span>
+                                            {{ getTypePatient(null, $p->type).': '.$p->affiliation}} <br>
+                                            <small>
+                                                <strong>AF. Principal: </strong> 
+                                                @if($p->affiliation_principal != NULL)
+                                                    {{ $p->affiliation_principal }}
+                                                @else
+                                                    {{ $p->parent->affiliation }}
+                                                @endif
+                                            </small>
+                                        </span>                                        
+                                    @else 
+                                        {{ getTypePatient(null, $p->type).': '.$p->affiliation}}
+                                    @endif
+                                </td>
                                 <td>{{ $p->lastname }}</td>
                                 <td>{{ $p->name }}</td>                                
                                 <td>{{ $p->contact }}</td>

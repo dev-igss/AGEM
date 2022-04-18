@@ -21,4 +21,16 @@ class ApiController extends Controller
         //return $data;
         return response()->json($data);
     }
+
+    public function getStudy($type){
+        $study = Studie::select('id', 'name')->where('type', $type)->get();
+        
+
+        $data = [
+            'study' => $study
+        ];
+
+        //return $data;
+        return response()->json($data);
+    }
 }

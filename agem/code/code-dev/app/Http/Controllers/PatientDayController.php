@@ -123,7 +123,90 @@ class PatientDayController extends Controller
             endif;
 
         endif;
-
-
     } 
+
+    public function getAppointmentComment($id, $text){
+        $appointment = Appointment::findOrFail($id);
+        $appointment->comment = $text;
+
+        if($appointment->save()):     
+
+            return back()->with('messages', '¡Comentario registrado y guardado correctamente!.')
+                ->with('typealert', 'success');
+            
+
+        endif;
+    }
+
+    public function getAppointmentReschedule($id){
+        $appointment = Appointment::findOrFail($id);
+        $appointment->status = "5";
+
+        if($appointment->save()):     
+            
+
+            if($appointment->area == '0'):
+                return redirect('/citas_del_dia_rx')->with('messages', '¡Acción realizada con exito!.')
+                    ->with('typealert', 'success');
+            else:
+                return redirect('/citas_del_dia_umd')->with('messages', '¡Acción realizada con exito!.')
+                    ->with('typealert', 'success');
+            endif;
+
+        endif;
+
+        //return $appointment;
+    }
+
+    public function getAppointmentNot($id){
+        $appointment = Appointment::findOrFail($id);
+        $appointment->status = "6";
+
+        if($appointment->save()):     
+            
+
+            if($appointment->area == '0'):
+                return redirect('/citas_del_dia_rx')->with('messages', '¡Acción realizada con exito!.')
+                    ->with('typealert', 'success');
+            else:
+                return redirect('/citas_del_dia_umd')->with('messages', '¡Acción realizada con exito!.')
+                    ->with('typealert', 'success');
+            endif;
+
+        endif;
+
+        //return $appointment;
+    }
+
+    public function getAppointmentAddExamen($id, $area, $study, $comment){
+        $detalle = new DetailAppointment();
+        $detalle->idappointment=$id;
+        switch($area):
+            case '0':
+                $detalle->idservice = '76';
+            break;
+
+            case '2':
+                $detalle->idservice = '77';
+            break;
+
+            case '3':
+                $detalle->idservice = '85';
+            break;
+
+            case '4':
+                $detalle->idservice = '86';
+            break;
+        endswitch;
+        $detalle->idstudy=$study;
+        if($comment != "vacio"):
+            $detalle->comment = $comment;
+        endif;
+
+        if($detalle->save()):     
+            return back()->with('messages', '¡Registro de Estudio Exito!.')
+                ->with('typealert', 'success');
+
+        endif;
+    }
 }

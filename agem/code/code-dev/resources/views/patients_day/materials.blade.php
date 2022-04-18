@@ -26,7 +26,14 @@
                         <span class="text">{{ $appointment->patient->name.' '.$appointment->patient->lastname }}</span><br>
 
                         <span class="title"><i class="fas fa-folder-open"></i><strong> Expediente: </strong></span> <br>
-                        <span class="text">{{ $appointment->num_study }}</span><br>
+                        <span class="text">{{ $appointment->num_study }}</span><br> 
+
+                        <hr>
+                        <span class="title"><i class="fa fa-mouse-pointer"></i><strong> Acciones: </strong></span> <br> 
+                        <a href="#" data-action="comentario" data-path="citas_del_dia/acciones" data-object="{{ $appointment->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Agregar Comentario" ><i class="fa fa-commenting"></i></a>
+                        <a href="#" data-action="solicitud_reprogramacion" data-path="citas_del_dia/acciones" data-object="{{ $appointment->id }}"  class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Solicitar Reprogramación" ><i class="fa fa-calendar"></i></a>
+                        <a href="#" data-action="ausente_examen" data-path="citas_del_dia/acciones" data-object="{{ $appointment->id }}"  class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Paciente Ausente" ><i class="fa fa-sign-out"></i></a>
+                        <a href="#" data-action="agregar_estudio" data-path="citas_del_dia/acciones" data-object="{{ $appointment->id }}" data-area="{{ $appointment->area }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Agregar Estudio" ><i class="fa fa-list-ul"></i></a>
                     </div>
 
                 </div>
@@ -89,7 +96,7 @@
                             </span><br>
 
                             <a href="#" id="bt_search" ></a>
-                            <a href="#" data-action="materials" data-path="materials/register" data-object="{{ $d->id }}" data-study="{{ $d->idstudy }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" >Asignar Material</a>
+                            <a href="#" data-action="materiales" data-object="{{ $d->id }}" data-study="{{ $d->idstudy }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" >Asignar Material</a>
 
                             <hr>
                         @endforeach

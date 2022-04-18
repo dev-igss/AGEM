@@ -1,5 +1,5 @@
 @extends('admin.master')
-@section('title','Dashboard')
+@section('title','Panel Administrativo')
 
 @section('content')
     

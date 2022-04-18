@@ -40,6 +40,7 @@
         Route::post('/paciente/agregar', 'Admin\PatientController@postPatientAdd')->name('patient_add');         
         Route::get('/paciente/{id}/editar', 'Admin\PatientController@getPatientEdit')->name('patient_edit');
         Route::post('/paciente/{id}/editar', 'Admin\PatientController@postPatientEdit')->name('patient_edit');
+        Route::get('/paciente/{id}/actualizar/afiliacion/principal/{affiliation}', 'Admin\PatientController@getPatientUpdateParent')->name('patient_edit');
         Route::get('/paciente/{id}/historial_citas', 'Admin\PatientController@getPatientHistoryExam')->name('patient_history_exam');
         Route::get('/paciente/{id}/historial_codigos_expedientes', 'Admin\PatientController@getPatientHistoryCode')->name('patient_history_exam');
 
@@ -48,7 +49,11 @@
         Route::get('/cita/agregar', 'Admin\AppointmentController@getAppointmentAdd')->name('appointment_add');        
         Route::post('/cita/agregar', 'Admin\AppointmentController@postAppointmentAdd')->name('appointment_add');
         Route::get('/cita/calendario', 'Admin\AppointmentController@getCalendar')->name('appointment_add'); 
+        Route::get('/cita/calendario/rx', 'Admin\AppointmentController@getCalendarRx')->name('appointment_add'); 
+        Route::get('/cita/calendario/umd', 'Admin\AppointmentController@getCalendarUmd')->name('appointment_add'); 
         Route::get('/cita/{id}/materiales', 'Admin\AppointmentController@getAppointmentMaterials')->name('appointment_materials');
+        Route::get('/cita/materiales/{id}/material_desechado', 'Admin\AppointmentController@getAppointmentMaterialsDiscarded')->name('appointment_materials');
+        Route::get('/cita/{id}/registro_materiales/{idstudy}/{idmaterial}/{amount}', 'Admin\AppointmentController@getAppointmentRegisterMaterials')->name('appointment_materials');
         Route::get('/cita/{id}/reprogramar/{date}', 'Admin\AppointmentController@getAppointmentReschedule')->name('appointment_reschedule');
         Route::get('/cita/{id}/paciente_presente/{status}', 'Admin\AppointmentController@getAppointmentPatientsStatus')->name('appointment_patients_status');
         Route::get('/cita/{id}/paciente_ausente/{status}', 'Admin\AppointmentController@getAppointmentPatientsStatus')->name('appointment_patients_status');
@@ -75,4 +80,6 @@
         Route::get('/agem/api/load/appointments/{date}/{area}', 'Admin\ApiController@getAppointments');
         Route::get('/agem/api/load/schedules/{date}/{area}', 'Admin\ApiController@getSchedule');
         Route::get('/agem/api/load/appointments', 'Admin\ApiController@getAppointmentsView');
+        Route::get('/agem/api/load/appointments/rx', 'Admin\ApiController@getAppointmentsViewRx');
+        Route::get('/agem/api/load/appointments/umd', 'Admin\ApiController@getAppointmentsViewUmd');
     });

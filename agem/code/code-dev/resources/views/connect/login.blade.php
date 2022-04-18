@@ -53,7 +53,8 @@
             @endif
 
             <div class="footer mtop16">
-                <a href="{{url('/citas_del_dia')}}"><i class="fa fa-arrow-left"></i> Regresar</a> 
+                <a href="{{url('/citas_del_dia_rx')}}"><i class="fa fa-arrow-left"></i> Citas RX</a> 
+                <a href="{{url('/citas_del_dia_umd')}}"><i class="fa fa-arrow-left"></i> Citas USG-MMO-DMO</a> 
             </div>
         </div>
 

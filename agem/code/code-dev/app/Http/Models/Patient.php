@@ -18,4 +18,8 @@ class Patient extends Model
     public function unit(){
         return $this->hasOne(Unit::class,'id','unit_id');
     }
+
+    public function parent(){
+        return $this->hasOne(Patient::class,'id','affiliation_idparent');
+    }
 }

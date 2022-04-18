@@ -24,8 +24,17 @@
                         <label for="name" class="mtop16"><strong><sup style="color: red;">(*)</sup> Numero de Afiliacion: </strong></label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
-                            {!! Form::text('affiliation', null, ['class'=>'form-control']) !!}
+                            {!! Form::select('type_patient', getTypePatient('list', null),0,['class'=>'form-select col-md-2', 'id'=> 'patient_type' ]) !!}
+                            {!! Form::text('affiliation', null, ['class'=>'form-control']) !!}                            
                         </div>
+
+                        <div id="af_prin">
+                            <label for="name" class="mtop16"><strong><sup style="color: red;">(*)</sup> Afiliacion Principal: </strong></label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon1"><i class="fas fa-keyboard"></i></span>
+                                {!! Form::text('af_prin', null, ['class'=>'form-control']) !!}
+                            </div>
+                        </div>                        
 
                         <label for="name" class="mtop16"><strong><sup style="color: red;">(*)</sup> Nombre:</strong></label>
                         <div class="input-group">
@@ -236,5 +245,23 @@
         </div>
         {!! Form::close() !!}
     </div>
+
+    <script>
+        $(document).ready(function(){
+            
+            var patient_type = document.getElementById('patient_type');
+            var af_prin = document.getElementById('af_prin');
+            
+            af_prin.hidden = true;
+
+            $('#patient_type').click(function(){
+                if(patient_type.value == 1 || patient_type.value == 2){
+                    af_prin.hidden = false;
+                }else{
+                    af_prin.hidden = true;
+                }
+            });
+        });
+    </script>
 
 @endsection

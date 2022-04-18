@@ -14,10 +14,23 @@
             <div class="header">
                 <h2 class="title"><i class="fas fa-calendar-alt"></i><strong> Listado de Citas</strong> </h2>
                 <ul>
-                    @if(kvfj(Auth::user()->permissions, 'patient_add'))
-                        <li>
-                            <a href="{{ url('/admin/cita/calendario') }}" ><i class="fa fa-calendar"></i> Ver Calendario</a>
-                        </li>
+                    @if(kvfj(Auth::user()->permissions, 'patient_add')) 
+                        <ul>
+                            <li>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle"
+                                            data-toggle="dropdown">
+                                            <i class="fa fa-calendar"></i>  Ver Calendario <span class="caret"></span>
+                                    </button>
+
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="{{ url('/admin/cita/calendario/rx') }}">RX</a></li>
+                                        <li><a href="{{ url('/admin/cita/calendario/umd') }}"> USG-MMO-DMO</a></li>
+                                        <li><a href="{{ url('/admin/cita/calendario') }}"> General</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
                     @endif
                     @if(kvfj(Auth::user()->permissions, 'patient_add'))
                         <li>
@@ -42,29 +55,41 @@
                         @foreach($appointments as $a)
                             <tr>
                                 <td>
-                                <div class="opts">
-                                    @if(kvfj(Auth::user()->permissions, 'appointment_reschedule'))
-                                        @if($a->status == '0')
-                                            <a href="#" data-action="reprogramar" data-path="admin/cita" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Reprogramación" ><i class="fas fa-calendar-alt"></i></a>
+                                    <div class="opts">
+                                        @if(kvfj(Auth::user()->permissions, 'appointment_reschedule'))
+                                            @if($a->status == '0')
+                                                <a href="#" data-action="reprogramar" data-path="admin/cita" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Reprogramación" ><i class="fas fa-calendar-alt"></i></a>
+                                            @endif
+                                            @if($a->status == '5')
+                                                <a href="#" data-action="reprogramacion_forzada" data-path="admin/cita" data-object="{{ $a->id }}" data-exam="{{ $a->area }}"  class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Reprogramación Forzada" ><i class="fas fa-calendar-alt"></i></a>
+                                            @endif
                                         @endif
-                                        @if($a->status == '1')
-                                            <a href="#" data-action="reprogramacion_forzada" data-path="admin/cita" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Reprogramación Forzada" ><i class="fas fa-calendar-alt"></i></a>
-                                        @endif
-                                    @endif
 
-                                    @if(kvfj(Auth::user()->permissions, 'appointment_patients_status'))
-                                        @if($a->status == '0' || $a->status == '4')
-                                            <a href="#" data-action="paciente_presente" data-path="admin/cita" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Paciente Presente"><i class="fas fa-calendar-check"></i></a>
-                                            <a href="#" data-action="paciente_ausente" data-path="admin/cita" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Paciente Ausente"><i class="fas fa-calendar-times"></i></a>
+                                        @if(kvfj(Auth::user()->permissions, 'appointment_reschedule'))
+                                            @if($a->status == '0')
+                                            <a href="{{ url('/admin/cita/'.$a->id.'/materiales') }}"  title="Constancia de Cita" ><i class="fa fa-file-text"></i></a>
+                                            @endif
                                         @endif
-                                    @endif
 
-                                    @if(kvfj(Auth::user()->permissions, 'appointment_materials'))
-                                        @if($a->status == '3')
-                                            <a href="{{ url('/admin/cita/'.$a->id.'/materiales') }}"  title="Materiales Usados" ><i class="fas fa-x-ray"></i></a>
+                                        @if(kvfj(Auth::user()->permissions, 'appointment_patients_status'))
+                                            @if($a->status == '0' || $a->status == '4')
+                                                <a href="#" data-action="paciente_presente" data-path="admin/cita" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Paciente Presente"><i class="fas fa-calendar-check"></i></a>
+                                                <a href="#" data-action="paciente_ausente" data-path="admin/cita" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Paciente Ausente"><i class="fas fa-calendar-times"></i></a>
+                                            @endif
                                         @endif
-                                    @endif
-                                </div>
+
+                                        @if(kvfj(Auth::user()->permissions, 'appointment_materials'))
+                                            @if($a->status == '3')
+                                                <a href="{{ url('/admin/cita/'.$a->id.'/materiales') }}"  title="Materiales Usados" ><i class="fas fa-x-ray"></i></a>
+                                            @endif
+                                        @endif
+
+                                        @if(kvfj(Auth::user()->permissions, 'appointment_materials'))
+                                            @if($a->status == '3')
+                                                <a href="{{ url('/admin/cita/'.$a->id.'/materiales') }}"  title="Informe a Patrono" ><i class="fas fa-file-pdf-o"></i></a>
+                                            @endif
+                                        @endif
+                                    </div>
                                 </td>
                                 <td>
                                     {{ \Carbon\Carbon::parse($a->date)->format('d-m-Y') }} <br>
@@ -73,7 +98,7 @@
                                     @else
                                         <small><strong>Horario: </strong> Sin Asignar</small><br>
                                     @endif
-                                    <small> {{ getTypeAppointment(null, $a->type)  }} </small>
+                                    <small> {{ getExamB(null, $a->area)  }} - {{ getTypeAppointment(null, $a->type)  }} </small>
                                 </td>
                                 <td> 
                                     {{ $a->patient->name.' '.$a->patient->lastname }} <br>

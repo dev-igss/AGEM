@@ -36,11 +36,11 @@
 			<div class="collapse navbar-collapse" id="navigationMain">
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item">
-						<a href="{{ url('#') }}" class="nav-link"><span> Sistema de Agenda Medica - IGSS</span></a>
+						<a href="{{ url('#') }}" class="nav-link"><span> Sistema de Agenda Electronica Médica - IGSS</span></a>
 					</li>
 					@if(!Auth::guest())
 						<li class="nav-item">
-							<a href="{{ url('/citas_del_dia') }}" class="nav-link"><i class="fas fa-home"></i> <span> Inicio</span></a>
+							<a href="{{ url('/admin') }}" class="nav-link"><i class="fas fa-home"></i> <span> Ir al Sistema</span></a>
 						</li>
 					@endif
 					@if(Auth::guest())

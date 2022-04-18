@@ -46,7 +46,7 @@
                                                        
                         </div>
                         <div class="card-footer text-muted">
-                            <a href="{{ url('/citas_del_dia/'.$a->id.'/materiales') }}" data-action="materials" >Concluir Cita</a>
+                            <a href="{{ url('/citas_del_dia/'.$a->id.'/materiales') }}" data-action="materials" >Más Información</a>
                         </div>
                     </div>                    
                 </div>

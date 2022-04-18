@@ -73,6 +73,22 @@
         endif;
     }
 
+    function getTypePatient($mode, $id){
+        $roles = [
+            '0' => 'AF',
+            '1' => 'BE',
+            '2' => 'BH',
+            '3' => 'JB',
+            '4' => 'NA'
+        ];
+
+        if(!is_null($mode)):
+            return $roles;
+        else:
+            return $roles[$id];
+        endif;
+    }
+
     function getExamB($mode, $id){
         $roles = [
             '0' => 'RX',
@@ -93,9 +109,11 @@
         $roles = [
             '0' => 'Agendada',
             '1' => 'En Atención',
-            '2' => 'Ausente',
+            '2' => 'Ausente a la Cita',
             '3' => 'Finalizada',
-            '4' => 'Reprogramada'
+            '4' => 'Reprogramada',
+            '5' => 'Solicitud de Reprogramación',
+            '6' => 'Ausente al Examen'
         ];
 
         if(!is_null($mode)):

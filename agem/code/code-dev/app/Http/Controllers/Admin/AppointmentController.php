@@ -182,7 +182,7 @@ class AppointmentController extends Controller
                 $ca1 = ControlAppointment::where('date' , $request->input('date'))->get();
                 foreach($ca1 as $c):
                     if($area == 0 ):
-                        if($c->amount_rx == 2):
+                        if($c->amount_rx == 10):
                             return back()->with('messages', '¡No se pueden agendar mas citas, espacios llenos!.')
                                     ->with('typealert', 'warning');
                         else:
@@ -191,21 +191,21 @@ class AppointmentController extends Controller
                     elseif($area == 1):
                         $c->amount_rx_special = $c->amount_rx_special + 1;
                     elseif($area == 2):
-                        if($c->amount_usg == 2):
+                        if($c->amount_usg == 10):
                             return back()->with('messages', '¡No se pueden agendar mas citas, espacios llenos!.')
                                     ->with('typealert', 'warning');
                         else:
                             $c->amount_usg = $c->amount_usg + 1;
                         endif;                        
                     elseif($area == 3):
-                        if($c->amount_mmo == 2):
+                        if($c->amount_mmo == 10):
                             return back()->with('messages', '¡No se pueden agendar mas citas, espacios llenos!.')
                                     ->with('typealert', 'warning');
                         else:
                             $c->amount_mmo = $c->amount_mmo + 1;
                         endif;                         
                     elseif($area == 4):
-                        if($c->amount_dmo == 2):
+                        if($c->amount_dmo == 10):
                             return back()->with('messages', '¡No se pueden agendar mas citas, espacios llenos!.')
                                     ->with('typealert', 'warning');
                         else:
@@ -274,14 +274,71 @@ class AppointmentController extends Controller
         return view('admin.appointments.calendar', $data);
     }
 
-    public function getAppointmentMaterials($id){
-        $materials = MaterialAppointment::where('idappointment', $id)->get();
+    public function getCalendarRx(){
+        
 
         $data = [
-            'materials' => $materials
+            
+        ];
+
+        return view('admin.appointments.calendar_rx', $data);
+    }
+
+    public function getCalendarUmd(){
+        
+
+        $data = [
+            
+        ];
+
+        return view('admin.appointments.calendar_umd', $data);
+    }
+
+    public function getAppointmentMaterials($id){        
+        $materials = MaterialAppointment::where('idappointment', $id)->get();
+        $detalles = DetailAppointment::where('idappointment', $id)->get();
+
+
+
+        $data = [
+            'materials' => $materials,
+            'detalles' => $detalles
         ];
 
         return view('admin.appointments.materials', $data);
+    }
+
+    public function getAppointmentMaterialsDiscarded($id){
+        $material = MaterialAppointment::findOrFail($id);
+        $material->status = '1';
+
+        if($material->save()):
+            $b = new Bitacora;
+            $b->action = "Material marcado como desechado ";
+            $b->user_id = Auth::id();
+            $b->save();
+
+            return back()->with('messages', '¡Material desechado con exito!.')
+                ->with('typealert', 'success');
+        endif;
+    }
+
+    public function getAppointmentRegisterMaterials($id, $idstudy, $idmaterial, $amount){
+        $material = new MaterialAppointment;
+        $material->idappointment = $id;
+        $material->idstudy = $idstudy;
+        $material->material = $idmaterial;
+        $material->amount = $amount;
+
+        if($material->save()):
+            $b = new Bitacora;
+            $b->action = "Registro de material a cita no.".$id;
+            $b->user_id = Auth::id();
+            $b->save();
+
+            return back()->with('messages', '¡Material registrado y guardado con exito!.')
+                ->with('typealert', 'success');
+        endif;
     }
 
     public function getAppointmentReschedule($id, $date){
