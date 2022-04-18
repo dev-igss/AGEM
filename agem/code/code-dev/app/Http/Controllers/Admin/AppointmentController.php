@@ -182,7 +182,7 @@ class AppointmentController extends Controller
                 $ca1 = ControlAppointment::where('date' , $request->input('date'))->get();
                 foreach($ca1 as $c):
                     if($area == 0 ):
-                        if($c->amount_rx == 100):
+                        if($c->amount_rx == 2):
                             return back()->with('messages', '¡No se pueden agendar mas citas, espacios llenos!.')
                                     ->with('typealert', 'warning');
                         else:
@@ -191,21 +191,21 @@ class AppointmentController extends Controller
                     elseif($area == 1):
                         $c->amount_rx_special = $c->amount_rx_special + 1;
                     elseif($area == 2):
-                        if($c->amount_usg == 100):
+                        if($c->amount_usg == 2):
                             return back()->with('messages', '¡No se pueden agendar mas citas, espacios llenos!.')
                                     ->with('typealert', 'warning');
                         else:
                             $c->amount_usg = $c->amount_usg + 1;
                         endif;                        
                     elseif($area == 3):
-                        if($c->amount_mmo == 100):
+                        if($c->amount_mmo == 2):
                             return back()->with('messages', '¡No se pueden agendar mas citas, espacios llenos!.')
                                     ->with('typealert', 'warning');
                         else:
                             $c->amount_mmo = $c->amount_mmo + 1;
                         endif;                         
                     elseif($area == 4):
-                        if($c->amount_dmo == 100):
+                        if($c->amount_dmo == 2):
                             return back()->with('messages', '¡No se pueden agendar mas citas, espacios llenos!.')
                                     ->with('typealert', 'warning');
                         else:
