@@ -86,7 +86,8 @@
                         //en la propiedad url de events ponemos el enlace
                         //y listo eso es todo ya el plugin se encargara de acomodar los eventos
                         //segun la fecha.
-                        url:'http://localhost/agem/public/admin/agem/api/load/appointments/rx',
+                        //url:'http://localhost/agem/public/admin/agem/api/load/appointments/rx',
+                        url:'http://10.11.0.30:8800/admin/agem/api/load/appointments/rx',
                         
                         
                     },
