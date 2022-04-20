@@ -120,10 +120,8 @@ function delete_object(e){
                     preConfirm: () => {
                         return [
                             
-                            idstudy = document.getElementById('swal-input2').value,
-
-                            
-                            comentario = document.getElementById('swal-input3').value
+                            idstudy = document.getElementById('swal-input2').value,                           
+                            comentario = document.getElementById('swal-input3').value 
                         ]
                     }
                     
@@ -142,8 +140,8 @@ function delete_object(e){
                 });    
                 select = document.getElementById('swal-input2');
                 select.innerHTML = "";
-                //var url1 = base + '/agem/public/agem/api/load/name/study/all/'+area;
-                var url1 = base + '/agem/api/load/name/study/all/'+area; 
+                var url1 = base + '/agem/public/agem/api/load/name/study/all/'+area;
+                //var url = base + 'admin/agem/api/load/studies/'+exam; 
                 http.open('GET', url1, true);
                 http.setRequestHeader('X-CSRF-TOKEN', csrfToken);
                 http.send();
@@ -195,8 +193,7 @@ function delete_object(e){
             }
         }).then((result) =>{
             if (result.isConfirmed) {
-                //var url = base + '/agem/public/agem/api/load/name/study/'+idstudyappointment;
-                var url = base + '/agem/api/load/name/study/'+idstudyappointment;
+                var url = base + '/agem/public/agem/api/load/name/study/'+idstudyappointment;
                 http.open('GET', url, true);
                 http.setRequestHeader('X-CSRF-TOKEN', csrfToken);
                 http.send();

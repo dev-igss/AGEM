@@ -61,7 +61,7 @@
                                                 <a href="#" data-action="reprogramar" data-path="admin/cita" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Reprogramación" ><i class="fas fa-calendar-alt"></i></a>
                                             @endif
                                             @if($a->status == '5')
-                                                <a href="#" data-action="reprogramacion_forzada" data-path="admin/cita" data-object="{{ $a->id }}" data-exam="{{ $a->area }}"  class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Reprogramación Forzada" ><i class="fas fa-calendar-alt"></i></a>
+                                                <a href="#" data-action="reprogramacion_forzada" data-path="admin/cita" data-object="{{ $a->id }}" class="btn-deleted" data-toogle="tooltrip" data-placement="top" title="Reprogramación Forzada" ><i class="fas fa-calendar-alt"></i></a>
                                             @endif
                                         @endif
 
@@ -86,7 +86,7 @@
 
                                         @if(kvfj(Auth::user()->permissions, 'appointment_materials'))
                                             @if($a->status == '3')
-                                                <a href="{{ url('/admin/cita/'.$a->id.'/materiales') }}"  title="Informe a Patrono" ><i class="fas fa-file-pdf-o"></i></a>
+                                                <a href="{{ url('/admin/cita/'.$a->id.'/informe_al_patrono') }}" target="_blank" title="Informe al Patrono" ><i class="fa fa-file"></i></a>
                                             @endif
                                         @endif
                                     </div>

@@ -55,8 +55,10 @@
         Route::get('/cita/materiales/{id}/material_desechado', 'Admin\AppointmentController@getAppointmentMaterialsDiscarded')->name('appointment_materials');
         Route::get('/cita/{id}/registro_materiales/{idstudy}/{idmaterial}/{amount}', 'Admin\AppointmentController@getAppointmentRegisterMaterials')->name('appointment_materials');
         Route::get('/cita/{id}/reprogramar/{date}', 'Admin\AppointmentController@getAppointmentReschedule')->name('appointment_reschedule');
+        Route::get('/cita/{id}/reprogramacion_forzada/{date}/{comment?}', 'Admin\AppointmentController@getAppointmentReschedule')->name('appointment_reschedule'); 
         Route::get('/cita/{id}/paciente_presente/{status}', 'Admin\AppointmentController@getAppointmentPatientsStatus')->name('appointment_patients_status');
         Route::get('/cita/{id}/paciente_ausente/{status}', 'Admin\AppointmentController@getAppointmentPatientsStatus')->name('appointment_patients_status');
+        Route::get('/cita/{id}/informe_al_patrono', 'Admin\AppointmentController@getAppointmentInforme')->name('appointment_materials');
 
         //Bitacoras
         Route::get('/bitacoras','Admin\BitacoraController@getBitacora')->name('bitacoras');        

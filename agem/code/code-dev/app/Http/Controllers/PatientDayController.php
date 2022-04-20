@@ -80,6 +80,8 @@ class PatientDayController extends Controller
 
         $cita = Appointment::findOrFail($request->get('appointmentid'));
         $cita->status = '3';
+        $hora = Carbon::now()->addMinutes(10)->format('H:i');
+        $cita->check_out = $hora;
         $cita->ibm_tecnico_1 = $id_tec1;
         $area_temp = $cita->area;
         if($request->get('ibm2') != ""):

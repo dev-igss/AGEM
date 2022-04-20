@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Http\Models\Appointment, App\Http\Models\ControlAppointment, App\Http\Models\DetailAppointment, App\Http\Models\MaterialAppointment, App\Http\Models\Patient, App\Http\Models\CodePatient, App\Http\Models\Service, App\Http\Models\Studie, App\Http\Models\Schedule, App\Http\Models\Bitacora;
-use Validator, Str, Config, Auth, Session, DB, Response, Carbon\Carbon;
+use Validator, Str, Config, Auth, Session, DB, PDF, Response, Carbon\Carbon;
 
 class AppointmentController extends Controller
 {
@@ -171,7 +171,14 @@ class AppointmentController extends Controller
                 elseif($area == 1):
                     $control->amount_rx_special = '1';
                 elseif($area == 2):
-                    $control->amount_usg = '1';
+                    $doppler = Studie::findOrFail($request->get('idstudy'));                    
+                    foreach($doppler as $d):
+                        if($d->is_doppler == '1'):
+                            $control->amount_usg_doppler = '1';
+                        else:
+                            $control->amount_usg = '1';
+                        endif;                    
+                    endforeach;                              
                 elseif($area == 3):
                     $control->amount_mmo = '1';
                 elseif($area == 4):
@@ -191,11 +198,18 @@ class AppointmentController extends Controller
                     elseif($area == 1):
                         $c->amount_rx_special = $c->amount_rx_special + 1;
                     elseif($area == 2):
-                        if($c->amount_usg == 10):
+                        if($c->amount_usg == 10 || $c->amount_usg_doppler == 4):
                             return back()->with('messages', '¡No se pueden agendar mas citas, espacios llenos!.')
                                     ->with('typealert', 'warning');
                         else:
-                            $c->amount_usg = $c->amount_usg + 1;
+                            $doppler = Studie::findOrFail($request->get('idstudy'));                    
+                            foreach($doppler as $d):
+                                if($d->is_doppler == '1'):
+                                    $c->amount_usg_doppler = $c->amount_usg_doppler + 1;
+                                else:
+                                    $c->amount_usg = $c->amount_usg + 1;
+                                endif;                    
+                            endforeach;                            
                         endif;                        
                     elseif($area == 3):
                         if($c->amount_mmo == 10):
@@ -341,11 +355,39 @@ class AppointmentController extends Controller
         endif;
     }
 
-    public function getAppointmentReschedule($id, $date){
+    public function getAppointmentReschedule($id, $date, $comment = NULL){
         $appointment = Appointment::findOrFail($id);
+        $horario = $appointment->schedule_id;
         $appointment->date_old = $appointment->date;
         $appointment->date = $date;
         $appointment->status = '4';
+
+        $cant_citas = Appointment::select(DB::raw('schedule_id, count(*) as total'))
+                    ->where('date', $date)
+                    ->where('schedule_id', $appointment->schedule_id)
+                    ->groupBy('schedule_id')
+                    ->get();
+        
+        foreach($cant_citas as $cc):
+            if($cc->schedule_id === $appointment->schedule_id && $cc->total == 2):
+                $disponibles = Appointment::select(DB::raw('schedule_id, count(*) as total'))
+                    ->where('date', $date)
+                    ->where('schedule_id', '!=' ,$appointment->schedule_id)
+                    ->groupBy('schedule_id')
+                    ->get();
+                
+                if(count($disponibles) > 0):
+                    foreach($disponibles as $d):
+                        if($d->total == 1):
+                            $appointment->schedule_id = $d->schedule_id;
+                        endif;
+                    endforeach;
+                endif;                                          
+            else:
+                $appointment->schedule_id = $horario;          
+            endif;
+        endforeach;
+                
 
         if($appointment->save()):               
 
@@ -357,6 +399,8 @@ class AppointmentController extends Controller
             return redirect('/admin/citas')->with('messages', '¡Cita reprogramada y guardada con exito!.')
                 ->with('typealert', 'success');
         endif;
+
+        
     }
 
     public function getAppointmentPatientsStatus($id, $status){        
@@ -407,6 +451,8 @@ class AppointmentController extends Controller
                 $appointment->num_study = $num_exp;                    
 
                 $appointment->status = $status;
+                $hora = Carbon::now()->format('H:i');
+                $appointment->check_in = $hora;
             endif; 
         else:
             $appointment->status = $status;
@@ -426,5 +472,16 @@ class AppointmentController extends Controller
             return redirect('/admin/citas')->with('messages', '¡Estado de cita actualizado con exito!.')
                 ->with('typealert', 'success');            
         endif;
+    }
+
+    public function getAppointmentInforme($id){
+        $appointment = Appointment::findOrFail($id);
+
+        $data = [
+            'appointment' => $appointment
+        ];
+
+        $pdf = PDF::loadView('admin.appointments.informe',$data)->setPaper('a4', 'portrait');
+        return $pdf->stream('Informe al Patrono '.$appointment->date.'.pdf');
     }
 }
